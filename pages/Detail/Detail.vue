@@ -1,8 +1,11 @@
 <template>
+	<view class="logding" v-loading.fullscreen.lock="fullscreenLoading">
+		
+	</view>
 	<view class="detail" v-if="temporarydata">
 		<el-page-header @back="backtohome" :icon="ArrowLeft">
 		    <template #content>
-		      <span class="text-large font-600 mr-3" style="white-space: nowrap;"> {{ temporarydata.title }} </span>
+		      <span class="text-large font-600 mr-3" style="white-space: nowrap; width: 400rpx; overflow: hidden;text-overflow: ellipsis;display: block;"> {{ temporarydata.title }} </span>
 			<view class="disappointed" @click="Leave">
 				<el-icon><MoreFilled /></el-icon>
 				
@@ -45,10 +48,12 @@
 				</view>
 			</view>
 			<view style="height:30rpx"></view>
-			<view class="title">
+			<p class="title" style="word-wrap:break-word;word-break:normal;">
 				{{ temporarydata?.title }}
-			</view>
-			{{ temporarydata?.text[0] }}
+			</p>
+			<p style="word-wrap:break-word;word-break:normal;">
+				{{ temporarydata?.text[0] }}
+			</p>
 		</el-card>
 		<view style="height:20rpx"></view>		
 		
@@ -186,7 +191,10 @@
 	import { postreply, getreply, getreplytime } from '../../apis/getreply.js'
 	import { dayjs, ElMessage } from 'element-plus'
 	import { Alreadypublish } from '../../store/Usepublish.js'
-
+	
+	
+	// logding
+	const fullscreenLoading = ref(false)
 	let testdata = ref([])
 	// 获取用户最文章的新数据
 	let { getEssayList } = Alreadypublish()
@@ -206,6 +214,7 @@
 	
 	// 当用户刷新页面,数据就会丢失,此时就需要将用户重定向
 	onMounted( async () => {
+		fullscreenLoading.value = false
 		window.scrollTo(0, 0)
 		if(!temporarydata.value) {
 			uni.reLaunch({

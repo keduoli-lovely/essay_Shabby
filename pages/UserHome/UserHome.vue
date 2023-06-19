@@ -1,4 +1,5 @@
 <template>
+	<view class="logding" v-loading.fullscreen.lock="fullscreenLoading"></view>
 	<view class="nav" @click="backtohome">
 		<el-icon class="icon"><ArrowLeft /></el-icon>&nbsp;&nbsp;用户详情
 	</view>
@@ -92,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { userDetail } from '../../store/UseuserDetail.js'
 import { NewuserDetail } from '../../store/getNewuserDetail.js'
@@ -104,7 +105,8 @@ import { Uselistdata } from '../../store/listdata.js'
 
 // 获取mask的状态 -- 显示/隐藏
 let { changenameSate } = storeToRefs(allMaskstates())
-
+// logding
+const fullscreenLoading = ref(true)
 // 获取用户信息
 let { userinfo } = storeToRefs(userDetail())
 
@@ -119,6 +121,10 @@ let isshowAge = ref(false)
 let closeShowAge = () => {
 	isshowAge.value = true
 }
+onMounted(() => {
+	fullscreenLoading.value = false
+})
+
 let abandon = () => {
 	isshowAge.value = false
 }

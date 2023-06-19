@@ -1,4 +1,5 @@
 <template>
+	<view class="logding" v-loading.fullscreen.lock="fullscreenLoading"></view>
 	<view class="myessay" v-if="!sendAndlive">
 		<view class="bar" >
 			<el-icon class="icon" @click="back"><ArrowLeft /></el-icon>
@@ -42,6 +43,8 @@
 			url: '/pages/index/index'
 		})
 	}
+	// logding
+	const fullscreenLoading = ref(true)
 	// 列表数据/用户发布的文章
 	let { essay } = storeToRefs(Alreadypublish())
 	let { getEssayList } = Alreadypublish()
@@ -54,6 +57,7 @@
 	// })
 	// 判断是否有数据,没有则返回首页
 	onMounted(() => {
+		fullscreenLoading.value = false
 		if(essay.value.length < 1) {
 			uni.reLaunch({
 				url: '/pages/index/index'
