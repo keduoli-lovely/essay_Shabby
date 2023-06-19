@@ -1,4 +1,7 @@
 <template>
+	<view class="logding" v-loading.fullscreen.lock="fullscreenLoading">
+		
+	</view>
 	<header class="header" :class="y > 50 ? 'atv' : ''">
 		<view class="pic" @click="show">
 			<image v-if="!userinfo.token" :src="user.pic" mode="aspectFill"></image>
@@ -15,14 +18,25 @@
 	
 	<nav class="navs">
 		 <el-tabs v-model="activeName" class="demo-tabs" @tab-change="newcon">
-		     <el-tab-pane label="推荐" name="1">
-				 <CardItem v-for="item in Storelistdata" :key="item._id" :listdata="item" @click="todetail(item)"></CardItem>
-			 </el-tab-pane>
+				 <el-tab-pane label="推荐" name="1">
+					 <CardItem v-for="item in Storelistdata" :key="item._id" :listdata="item" @click="todetail(item)"></CardItem>
+					 
+					 <view class="messagefloor" v-if="movedatamessage">
+					 	没有更多数据啦!!
+					 </view>
+				 </el-tab-pane>
+
 		        <el-tab-pane label="最新" name="2">
 					<CardItem v-for="item in Storelistdatatime" :key="item._id" :listdata="item" @click="todetail(item)"></CardItem>
+					<view class="messagefloor" v-if="movedatamessage">
+						没有更多数据啦!!
+					</view>
 				</el-tab-pane>
 		        <el-tab-pane label="热门" name="3">
 					<CardItem v-for="item in Storelistdatasolt" :key="item._id" :listdata="item" @click="todetail(item)"></CardItem>
+					<view class="messagefloor" v-if="movedatamessage">
+						没有更多数据啦!!
+					</view>
 				</el-tab-pane>
 		  </el-tabs>
 	</nav>
@@ -166,9 +180,16 @@
 	import changenameItem from '../../components/changename/changenameItem.vue'
 	import { allMaskstates } from '../../store/allMaskState.js'
 	import { Uselistdata } from '../../store/listdata.js'
-	import { useScroll } from '@vueuse/core'
+	import { useScroll, useInfiniteScroll  } from '@vueuse/core'
+	import { onLoad, onPullDownRefresh, onReachBottom } from "@dcloudio/uni-app"
+	import { ElMessage } from 'element-plus'
 	
-	
+	// logding
+	const fullscreenLoading = ref(true)
+	// 保存当前页面的index
+	let pageIndex = ref(1)
+	// 没有跟多数提示标签的状态 --- 显示/隐藏
+	let movedatamessage = ref(false)
 	// 获取mask的状态 -- 显示/隐藏
 	let { changenameSate, changeloginState, activeName, sendAndlive } = storeToRefs(allMaskstates())
 	// 最新列表数据
@@ -190,6 +211,7 @@
 		root: false
 	})
 	onMounted(() => {
+		fullscreenLoading.value = false
 		// 获取文章列表a
 		if(Storelistdata.value.length < 1) {
 			getlistdatafn()		
@@ -264,7 +286,8 @@
 		}
 	}
 	// 获取最新的数据
-	let newcon = async (e) => {
+	let newcon = (e) => {
+		pageIndex.value = e
 		if(e == 1) {
 			if(Storelistdata.value.length > 0) return
 			getlistdatafn()
@@ -293,6 +316,83 @@
 			changeloginState.value = true
 		}
 	}
+	
+	// 实现下拉刷新
+	onPullDownRefresh(() => {
+		movedatamessage.value = false
+		if(pageIndex.value == 1) {
+			getlistdatafn().then(res => {
+				showErrorandsuccess(res)
+			})
+		}
+		else if(pageIndex.value == 2) {
+			getlistdatatimefn().then(res => {
+				showErrorandsuccess(res)
+			})
+		}else if(pageIndex.value == 3) {
+			getlistdatasoltfn().then(res => {
+				showErrorandsuccess(res)
+			})
+		}
+	})
+		
+	// 触底加载跟多
+	onReachBottom(() => {
+		// 如果当前状态为true者表示没有数据,就没必要往下走
+		if(movedatamessage.value) return
+		
+		if(pageIndex.value == 1) {
+			if(Storelistdata.value.length) {
+				let limit = Storelistdata.value.length + 15
+				getlistdatafn(limit).then(res => {
+					showErrorandsuccess(res)
+					if(res) {
+						movedatamessage.value = res
+					}
+				})
+			}
+		}else if(pageIndex.value == 2) {
+			if(Storelistdatatime.value.length) {
+				let limit = Storelistdatatime.value.length + 15
+				getlistdatatimefn(limit).then(res => {
+					showErrorandsuccess(res)
+					if(res) {
+						movedatamessage.value = res
+					}
+				})
+			}
+			
+		}else if(pageIndex.value == 3) {
+			if(Storelistdatasolt.value.length) {
+				let limit = Storelistdatasolt.value.length + 15
+				getlistdatasoltfn(limit).then(res => {
+					showErrorandsuccess(res)
+					if(res) {
+						movedatamessage.value = res
+					}
+				})
+			}
+		}
+	})
+	
+	// 判断是否还有最新数据
+	let showErrorandsuccess = (has) => {
+		if(has) {
+			setTimeout(() => {
+				uni.stopPullDownRefresh();
+			}, 500)
+			ElMessage({
+			    showClose: true,
+			    message: '已经是最新!',
+			  })
+		}else {
+			setTimeout(() => {
+				uni.stopPullDownRefresh();
+			}, 500)
+			ElMessage.success('加载成功!')
+		}
+	}
+	
 </script>
 
 <style lang="scss" scped>
@@ -330,6 +430,11 @@
 	
 	.navs {
 		padding: 20rpx 30rpx;
+		.messagefloor {
+			padding: 40rpx 0 15rpx 0;
+			text-align: center;
+			font-size: 32rpx;
+		}
 	}
 	
 	.leftSele,
