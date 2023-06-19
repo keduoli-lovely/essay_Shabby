@@ -23,16 +23,9 @@
 			</el-form-item>
 
 			<view class="textera">
-				<text class="t1">内容</text> <el-input v-model="form.text" :autosize="{ minRows: 2, maxRows: 4 }"
+				&nbsp;&nbsp;<text class="t1">内容</text><el-input v-model="form.text" :autosize="{ minRows: 2, maxRows: 4 }"
 					type="textarea" placeholder="内容" />
 			</view>
-
-			<el-form-item label="时间" prop="time">
-				<el-col :span="11">
-					<el-date-picker v-model="form.time" type="date" placeholder="选择时间" style="width: 100%" />
-				</el-col>
-			</el-form-item>
-
 
 			<el-button type="primary" @click="onSubmit(formsend)">
 				发布
@@ -42,6 +35,8 @@
 			</el-button>
 		</el-form>
 	</view>
+	
+	<view class="bg"></view>
 </template>
 
 <script setup>
@@ -52,8 +47,7 @@
 	import { storeToRefs } from 'pinia'
 	import { NewuserDetail } from '../../store/getNewuserDetail.js'
 	import { Uselistdata } from '../../store/listdata.js'
-	
-	
+	import dayjs from 'dayjs'
 	
 	let { getuserFn } = NewuserDetail()
 	let { getlistdatafn } = Uselistdata()
@@ -61,8 +55,7 @@
 	let formsend = ref(null)
 	const form = ref({
 		title: '',
-		text: '',
-		time: ''
+		text: ''
 	})
 	
 	let { userinfo } = storeToRefs(userDetail())
@@ -75,11 +68,7 @@
 			message: '不能为空',
 			trigger: 'blur'
 		}],
-		time: [{
-			required: true,
-			message: '不能为空',
-			trigger: 'blur'
-		}],
+
 	})
 
 	let back = () => {
@@ -95,6 +84,7 @@
 		formsend.validate( async (res) => {
 			if(res && form.value.text) {
 				let obj = {
+					time: dayjs(new Date()).format('YYYY-MM-DD&HH:MM:ss').split('&').join('T') + 'Z',
 					user_id: userinfo.value.userinfo.Account,
 					...form.value,
 					user: {
@@ -122,11 +112,21 @@
 </script>
 
 <style lang="scss" scoped>
+	// 背景色
+	.bg {
+		z-index: -1;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #bbf1fa;
+	}
 	.formbox {
 		width: 100%;
 		height: 100%;
 		padding: 30rpx 25rpx;
-		background-color: #151515;
+		background-color: #A6E3E9;
 
 		.header {
 			display: flex;
