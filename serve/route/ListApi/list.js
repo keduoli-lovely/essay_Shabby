@@ -8,8 +8,8 @@ const error = require('../errData/error.js')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-	
-	listdataMOdel.find().limit(15).then((list) => {
+	let { limit = 15 } = req.query
+	listdataMOdel.find().limit(limit).then((list) => {
 		res.send({
 			data: {
 				code: 200,
@@ -26,7 +26,8 @@ router.get('/', (req, res) => {
 })
 
 router.get('/time', (req, res) => {
-	listdataMOdel.find().sort({time: -1}).limit(15).exec().then((data) => {
+	let { limit = 15 } = req.query
+	listdataMOdel.find().sort({time: -1}).limit(limit).exec().then((data) => {
 		res.send({
 			data: {
 				code: 200,
@@ -99,7 +100,8 @@ router.post('/star', tokenFn, (req, res) => {
 })
 
 router.get('/solt', (req, res) => {
-	listdataMOdel.find().sort({live: -1}).limit(15).exec().then((data) => {
+	let { limit = 15 } = req.query
+	listdataMOdel.find().sort({live: -1}).limit(limit).exec().then((data) => {
 		res.send({
 			data: {
 				code: 200,
