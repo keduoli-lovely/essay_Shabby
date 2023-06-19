@@ -3,20 +3,20 @@
 
 import http from '../http/http.js'
 
-export let getlistdata = () => {
+export let getlistdata = (limit = 15) => {
 	return http({
-		url: '/list'
+		url: `/list?limit=${limit}`
 	})
 }
 
-export let getlistdatatime = () => {
+export let getlistdatatime = (limit = 15) => {
 	return http({
-		url: '/list/time'
+		url: `/list/time?limit=${limit}`
 	})
 }
 
-export let getlistdatasolt = () => {
+export let getlistdatasolt = (limit = 15) => {
 	return http({
-		url: '/list/solt'
+		url: `/list/solt?limit=${limit}`
 	})
 }
