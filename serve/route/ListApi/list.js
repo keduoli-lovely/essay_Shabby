@@ -113,4 +113,21 @@ router.get('/solt', (req, res) => {
 	})
 })
 
+router.get('/row', (req, res) => {
+	let { id } = req.query
+	
+	listdataMOdel.findOne({_id: id}).then(data => {
+		res.send({
+			data: {
+				code: 200,
+				result: data
+			}
+		})
+	}).catch( err => {
+		res.status(500).send(error)
+	})
+})
+
+
+
 module.exports = router
