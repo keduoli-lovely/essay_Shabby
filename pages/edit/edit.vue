@@ -30,7 +30,7 @@
 			<el-button type="primary" @click="onSubmit(formsend)">
 				发布
 			</el-button>
-			<el-button>
+			<el-button @click="backindex">
 				取消
 			</el-button>
 		</el-form>
@@ -107,6 +107,12 @@
 			}else {
 				ElMessage.error('有内容未填写')
 			}
+		})
+	}
+	// 取消发布文章
+	let backindex = () => {
+		uni.reLaunch({
+			url: '/pages/index/index'
 		})
 	}
 </script>
