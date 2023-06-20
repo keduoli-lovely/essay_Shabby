@@ -58,6 +58,7 @@
 	// 判断是否有数据,没有则返回首页
 	onMounted(() => {
 		fullscreenLoading.value = false
+		window.scrollTo(0, 0)
 		if(essay.value.length < 1) {
 			uni.reLaunch({
 				url: '/pages/index/index'
