@@ -66,10 +66,7 @@
 						</span>
 						<template #dropdown>
 						  <el-dropdown-menu >
-							<el-dropdown-item :command="1" >默认排序</el-dropdown-item>
-							<el-dropdown-item :command="2" >按时间排序</el-dropdown-item>
-							<el-dropdown-item :command="3" >按热度排序</el-dropdown-item>
-							<el-dropdown-item :command="4" >只看楼主</el-dropdown-item>
+							<el-dropdown-item v-for="(item, i) in plsorttext" :key="item" :command="i + 1" >{{ item }}</el-dropdown-item>
 						  </el-dropdown-menu>
 						</template>
 					  </el-dropdown>
@@ -83,7 +80,7 @@
 		<el-card>
 			<view class="Commentarea">
 				<view class="pl-title">
-					热门回复
+					{{ plsorttext[textindex] }}
 				</view>
 				
 				<view class="pl-box" v-for="item in testdata" :key="item.id">
@@ -191,8 +188,24 @@
 	import { postreply, getreply, getreplytime } from '../../apis/getreply.js'
 	import { dayjs, ElMessage } from 'element-plus'
 	import { Alreadypublish } from '../../store/Usepublish.js'
+	import { getrowEssay } from '../../apis/rowEssay.js'
+	import { onLoad } from "@dcloudio/uni-app"
 	
+	// 获取query参数
+	let essay_id_data = ref(null)
+	onLoad((e) => {
+		essay_id_data.value = e.id
+	})
 	
+	// 文本索引
+	let textindex = ref(0)
+	// 评论排序
+	let plsorttext = ref([
+		'默认排序',
+		'按时间排序',
+		'按热度排序',
+		'只看楼主'
+	])
 	// logding
 	const fullscreenLoading = ref(false)
 	let testdata = ref([])
@@ -217,12 +230,26 @@
 		fullscreenLoading.value = false
 		window.scrollTo(0, 0)
 		if(!temporarydata.value) {
-			uni.reLaunch({
-				url: '/pages/index/index'
-			})
+			if(essay_id_data.value) {
+				let res = await getrowEssay(essay_id_data.value)
+				if(res.data.data.code == 200) {
+					temporarydata.value = res.data.data.result
+					let res1 = await getreply(temporarydata.value._id)
+					testdata.value = res1.data.data.result
+				}else {
+					uni.reLaunch({
+						url: '/pages/index/index'
+					})
+				}
+				
+			}else {
+				uni.reLaunch({
+					url: '/pages/index/index'
+				})
+			}			
 		}else {
-			let res = await getreply(temporarydata.value._id)
-			testdata.value = res.data.data.result
+			let res1 = await getreply(temporarydata.value._id)
+			testdata.value = res1.data.data.result
 		}
 		
 	})
@@ -300,6 +327,7 @@
 	
 	// 选着评论的排序
 	let select = async (e) => {
+		textindex.value = e - 1
 		if(e == 1) {
 			let res1 = await getreply(temporarydata.value._id)
 			testdata.value = res1.data.data.result
