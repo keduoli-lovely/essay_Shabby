@@ -4,9 +4,6 @@ import http from '../http/http.js'
 
 export let getuserEassyData = (id) => {
 	return http({
-		url: `/list/find`,
-		params: {
-			id
-		}
+		url: `/list/find?id=${id}`,
 	})
 }
