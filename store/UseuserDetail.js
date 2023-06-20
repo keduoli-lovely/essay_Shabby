@@ -19,7 +19,6 @@ export const userDetail = defineStore('user', () => {
 		let res = await login(data)
 		userinfo.value = res.data.data
 		uni.setStorageSync('userinfo', userinfo.value)
-		console.log(res)
 		if(res.data.data.code == 2000) {
 			return res.data.data.message
 		}
