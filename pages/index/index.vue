@@ -156,7 +156,6 @@
 			</view>
 		</view>
 	</view>
-	
 	<!-- // 确认框 -->
 	<interrogate :why="false">
 		您确定要退出吗?
@@ -207,7 +206,7 @@
 	let user = ref({
 		name: '未登入',
 		age: '0',
-		pic: '../../static/pic/default.png',
+		pic: '/pubilc/logImg/default.png',
 		root: false
 	})
 	onMounted(() => {
@@ -270,7 +269,7 @@
 	let todetail = (data) => {
 		temporarydata.value = data
 		uni.reLaunch({
-			url: `/pages/Detail/Detail`
+			url: `/pages/Detail/Detail?id=${data._id}`
 		})
 	}
 	// 登入页面/个人中心
