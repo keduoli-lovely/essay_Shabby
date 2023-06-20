@@ -61,7 +61,11 @@
 	import { login, registered } from '../../apis/login.js'
 	import { userDetail } from '../../store/UseuserDetail.js'
 	import { NewuserDetail } from '../../store/getNewuserDetail.js'
+	import { Alreadypublish } from '../../store/Usepublish.js'
 	let { getuserFn } = NewuserDetail()
+	
+	// 获取用户发布的文章
+	let { getEssayList } = Alreadypublish()
 	
 	let { loginandgetinfo } = userDetail()
 	// 登入/注册
@@ -103,6 +107,8 @@
 				// console.log(form.value);
 				// let res = await login(form.value)
 				loginandgetinfo(form.value).then((data) => {
+					let userinfo = uni.getStorageSync('userinfo')
+					getEssayList(userinfo.userinfo.Account)
 					ElMessage.success(data)
 				}).catch((err) => {
 					ElMessage.error('出错了')
