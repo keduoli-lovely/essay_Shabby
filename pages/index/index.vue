@@ -162,9 +162,44 @@
 	</interrogate>
 	<!-- // 确认框 -->
 	
-	<view class="edit" @click="toEdit">
-		<el-icon><Edit /></el-icon>
+	<!-- // 编辑按钮 -->
+	<view class="edit">
+		<view class="edit-sele-state" v-show="isshowedit" @click.stop="showmask">
+			<el-icon><Edit /></el-icon>
+		</view>
+		<view class="round" @click.stop="closemask" :style="{transform: `scale(${magnify})`}">
+			
+		</view>
+		
+		<view class="gather" v-show="!isshowedit">
+				<view class="row1">
+					<view class="sendessay" id="toedit" @click.stop="toEdit">
+						<i class="iconfont icon-xieboke icon1"></i>发文章
+					</view>
+					<view class="freepic">
+						<i class="iconfont icon-pic icon1"></i>分享图片
+					</view>
+				</view>
+				
+				<view class="row2">
+					<view class="wait">
+						<el-icon><Warning /></el-icon>
+					</view><view class="wait">
+						<el-icon><Warning /></el-icon>
+					</view><view class="wait">
+						<el-icon><Warning /></el-icon>
+					</view><view class="wait">
+						<el-icon><Warning /></el-icon>
+					</view><view class="wait">
+						<el-icon><Warning /></el-icon>
+					</view><view class="wait">
+						<el-icon><Warning /></el-icon>
+					</view>
+				</view>
+		</view>
 	</view>
+	
+	<!-- // 编辑按钮 -->
 	
 	<changenameItem v-if="userinfo.token"></changenameItem>
 </template>
@@ -183,6 +218,9 @@
 	import { onLoad, onPullDownRefresh, onReachBottom } from "@dcloudio/uni-app"
 	import { ElMessage } from 'element-plus'
 	
+	
+	// 编辑状态的切换
+	let isshowedit = ref(true)
 	// logding
 	const fullscreenLoading = ref(true)
 	// 保存当前页面的index
@@ -202,7 +240,6 @@
 	// 列表数据/方法
 	let { Storelistdata, Storelistdatatime, Storelistdatasolt } = storeToRefs(Uselistdata())
 	let { getlistdatafn, getlistdatatimefn, getlistdatasoltfn } = Uselistdata()
-	
 	let user = ref({
 		name: '未登入',
 		age: '0',
@@ -251,7 +288,8 @@
 		isshow.value = false
 	}
 	// 跳转到编辑页面
-	let toEdit = () => {
+	let toEdit = (e) => {
+		if(e.target.id !== 'toedit') return
 		let key = uni.getStorageSync('userinfo')
 		if(key.token) {
 			userinfo.value = key
@@ -262,13 +300,24 @@
 			uni.reLaunch({
 				url: '/pages/login/login'
 			})
-		}		
+		}	
+	}
+	// 展示遮罩,显示选项
+	let magnify = ref(1)
+	let showmask = () => {
+		isshowedit.value = false
+		magnify.value = 30
+	}
+	// 取消上面的跳转
+	let closemask = () => {
+		magnify.value = 1
+		isshowedit.value = true
 	}
 	
 	// 详情页面 
 	let todetail = (data) => {
 		temporarydata.value = data
-		uni.reLaunch({
+		uni.navigateTo({
 			url: `/pages/Detail/Detail?id=${data._id}`
 		})
 	}
@@ -552,7 +601,9 @@
 		z-index: 10;
 		background-color: transparent;
 	}
-	.edit {
+	.edit,
+	.edit-sele-state {
+		z-index: 999;
 		padding-top: 6rpx;
 		position: fixed;
 		right: 60rpx;
@@ -562,8 +613,81 @@
 		height: 120rpx;
 		text-align: center;
 		line-height: 120rpx;
-		background-color: skyblue;
 		border-radius: 50%;
+		background-color: transparent;
+		.round {
+			z-index: 99;
+			position: absolute;
+			top: 0;
+			border-radius: 50%;
+			width: 120rpx;
+			height: 120rpx;
+			transition: all .5s ease-out;
+			backdrop-filter: blur(.5rpx);
+			background-color: rgba(255,255,255, .6);
+		}
+	}
+	@keyframes gat {
+		0% {
+			transform: rotate(5deg);
+		}
+		50% {
+			transform: rotate(-5deg);
+		}
+		100% {
+			transform: rotate(0deg);
+		}
+	}
+	.gather {
+		transition: all 1s ease;
+		z-index: 100;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		width: 80%;
+		height: 30%;
+		transform: translate(-50%, -50%);
+		.row1 {
+			display: flex;
+			justify-content: space-between;
+			.sendessay,
+			.freepic {
+				overflow: hidden;
+				animation: .4s linear 0s alternate gat;
+				font-size: 32rpx;
+				width: 45%;
+				height: 140rpx;
+				line-height: 140rpx;
+				border-radius: 14rpx;
+				background-color: skyblue;
+				.icon1 {
+					margin-right: 12rpx;
+					vertical-align: bottom;
+					font-size: 50rpx;
+				}
+			}
+		}
+		.row2 {
+			padding: 20rpx 60rpx 0;
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			.wait {
+				animation: .4s linear 0s alternate gat;
+				margin-right: 40rpx;
+				margin-top: 40rpx;
+				width: 100rpx;
+				height: 100rpx;
+				border-radius: 14rpx;
+				background-color: skyblue;
+				&:nth-child(3n) {
+					margin-right: 0;
+				}
+			}
+		}
+	}
+	.edit-sele-state {
+		background-color: skyblue;
 	}
 	.demo-tabs > .el-tabs__content {
 	  padding: 32px;
