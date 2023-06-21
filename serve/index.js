@@ -13,7 +13,6 @@ const File = require('./route/FileApi/file.js')
 const Reply = require('./route/ReplyApi/reply.js')
 const Del = require('./route/DeleteEssay/del.js')
 
-const uploadAvatar = require('./ImgSave/imginsave.js')
 const Add = require('./route/add/Add.js')
 const dbfn = require('./DataBase/db.js')
 const voucherisout = require('./route/fn/voucherisout.js')
@@ -45,7 +44,6 @@ dbfn(() => {
 	app.use('/home', verify, Home)
 	app.use('/add', Add)
 	app.use('/del', Del)
-	// app.use('/uploadAvatar', uploadAvatar)
 	app.get('/', (req, res) => {
 		res.send('index')
 	})
