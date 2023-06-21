@@ -102,7 +102,11 @@ import changenameItem from '../../components/changename/changenameItem.vue'
 import { allMaskstates } from '../../store/allMaskState.js'
 import { changeusernameApi } from '../../apis/changeuserdetail.js'
 import { Uselistdata } from '../../store/listdata.js'
+import { config } from '../../store/config.js'
 
+
+// 默认地址
+let { BaseUrl } = storeToRefs(config())
 // 获取mask的状态 -- 显示/隐藏
 let { changenameSate } = storeToRefs(allMaskstates())
 // logding
@@ -155,7 +159,7 @@ let array = ref(['男', '女', '未知', '沃尔玛购物袋'])
 let index = ref(0)
 // 数据集中
 const imageUrl = ref('')
-const urlbase = ref('http://127.0.0.1:3000/upload')
+const urlbase = ref(`${BaseUrl.value}/upload`)
 
 let token = {
 	token: userinfo.value.token
