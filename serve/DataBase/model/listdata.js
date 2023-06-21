@@ -32,7 +32,8 @@ let listdataSchema = new mongoose.Schema({
 	geiv: {
 		type: Number,
 		default: 0
-	}
+	},
+	essaypics: []
 
 })
 
