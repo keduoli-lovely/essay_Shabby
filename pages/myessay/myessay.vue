@@ -9,7 +9,7 @@
 		</view>
 		
 		<view class="body-con">
-			<CardItem v-for="item in essay.send" :key="item._id" :listdata="item"></CardItem>
+			<CardItem v-for="item in essay.send" :key="item._id" :listdata="item" @click="todetail(item._id)"></CardItem>
 			
 		</view>	
 	</view>
@@ -22,7 +22,7 @@
 		</view>
 		
 		<view class="body-con">
-			<CardItem v-for="item in essay.live" :key="item._id" :listdata="item"></CardItem>
+			<CardItem v-for="item in essay.live" :key="item._id" :listdata="item" @click="todetail(item._id)"></CardItem>
 			
 		</view>	
 	</view>
@@ -43,11 +43,6 @@
 			url: '/pages/index/index'
 		})
 	}
-	// logding
-	const fullscreenLoading = ref(true)
-	// 列表数据/用户发布的文章
-	let { essay } = storeToRefs(Alreadypublish())
-	let { getEssayList } = Alreadypublish()
 	
 	// 判断是否有数据,没有则请求 -------------- 整不了,刷新sendAndlive数据也会丢
 	// onMounted(() => {
@@ -65,6 +60,19 @@
 			})
 		}
 	})
+	
+	// logding
+	const fullscreenLoading = ref(true)
+	// 列表数据/用户发布的文章
+	let { essay } = storeToRefs(Alreadypublish())
+	let { getEssayList } = Alreadypublish()
+
+	// 跳转到详情页
+	let todetail = (id) => {
+		uni.navigateTo({
+			url: `/pages/Detail/Detail?id=${id}`
+		})
+	}
 </script>
 
 <style lang="scss" scoped>
