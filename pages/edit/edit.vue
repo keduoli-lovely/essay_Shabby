@@ -7,7 +7,7 @@
 				</el-icon> &nbsp;back
 			</view>
 			<view class="userpic">
-				<image :src="userinfo.userinfo.pic" mode="aspectFill"></image>
+				<image :src="userinfo?.userinfo?.pic" mode="aspectFill"></image>
 			</view>
 			<view class="news">
 				编辑
@@ -26,6 +26,28 @@
 				&nbsp;&nbsp;<text class="t1">内容</text><el-input v-model="form.text" :autosize="{ minRows: 2, maxRows: 4 }"
 					type="textarea" placeholder="内容" />
 			</view>
+			
+			<view class="pic_list">
+				<el-upload
+				    v-model:file-list="fileList"
+				    :action="pic_send_url"
+					method="post"
+				    list-type="picture-card"
+				    :on-preview="handlePictureCardPreview"
+					:auto-upload="true"
+					:limit="5"
+					:on-exceed="messagelimit"
+					:headers="token"
+				  >
+				    <el-icon><Plus /></el-icon>
+				  </el-upload>
+				
+				  <el-dialog v-model="dialogVisible">
+				    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+				  </el-dialog>
+			</view>
+			
+			  
 
 			<el-button type="primary" @click="onSubmit(formsend)">
 				发布
@@ -47,21 +69,52 @@
 	import { storeToRefs } from 'pinia'
 	import { NewuserDetail } from '../../store/getNewuserDetail.js'
 	import { Uselistdata } from '../../store/listdata.js'
+	import { config } from '../../store/config.js'
 	import dayjs from 'dayjs'
 	
+	
+	// 默认配置
+	let { BaseUrl } = storeToRefs(config())
 	let { getuserFn } = NewuserDetail()
 	let { getlistdatafn } = Uselistdata()
 	
+	let { userinfo } = storeToRefs(userDetail())
+	if(!userinfo.value.token) {
+			uni.reLaunch({
+				url: '/pages/login/login'
+			})
+		}else if(!userinfo.value.userinfo.pic) {
+		userinfo.value.userinfo.pic = '../../static/pic/default.png'
+	}
 	let formsend = ref(null)
 	const form = ref({
 		title: '',
 		text: ''
 	})
 	
-	let { userinfo } = storeToRefs(userDetail())
-	if(!userinfo.value.userinfo.pic) {
-		userinfo.value.userinfo.pic = '../../static/pic/default.png'
+	// 当用户上传的文件到达上限提示
+	let messagelimit = () => {
+		
+		ElMessage.error('最多5张图片')
 	}
+	
+	// 上传图片
+	const pic_send_url = ref(`${BaseUrl.value}/add/pic`)
+	let token = {
+		token: userinfo.value.token
+	}
+	let fileList = ref([])
+	const dialogImageUrl = ref('')
+	const dialogVisible = ref(false)
+	
+
+	
+	const handlePictureCardPreview = (file) => {
+	  dialogImageUrl.value = file.url
+	  dialogVisible.value = true
+	}
+	
+	
 	const rules = ref({
 		title: [{
 			required: true,
@@ -72,6 +125,7 @@
 	})
 
 	let back = () => {
+		
 		uni.reLaunch({
 			url: '/pages/index/index'
 		})
@@ -84,7 +138,7 @@
 		formsend.validate( async (res) => {
 			if(res && form.value.text) {
 				let obj = {
-					time: dayjs(new Date()).format('YYYY-MM-DD&HH:MM:ss').split('&').join('T') + 'Z',
+					time: dayjs(new Date()).format('YYYY-MM-DD&HH:mm:ss').split('&').join('T') + 'Z',
 					user_id: userinfo.value.userinfo.Account,
 					...form.value,
 					user: {
@@ -92,6 +146,7 @@
 						pic: userinfo.value.userinfo.pic
 					}
 				}
+				
 				let res = await AddNews(obj)
 				if(res.data.code == 200) {
 					getlistdatafn()
@@ -171,7 +226,7 @@
 	}
 
 	.body {
-		padding: 50rpx 80rpx;
+		padding: 50rpx 65rpx;
 
 		.textera {
 			margin-bottom: 30rpx;
@@ -185,5 +240,49 @@
 				color: #606266;
 			}
 		}
+		.pic_list {
+			padding: 12rpx 10rpx;
+			background-color: #b5cfd8;
+			border-radius: 8rpx;
+		}
+	}
+	
+	::v-deep .el-dialog {
+		position: relative;
+		width: 95%;
+		height: 1000rpx;
+		
+	}
+	::v-deep .el-dialog__body {
+		padding: 25rpx;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 95%;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+	::v-deep .el-dialog__headerbtn {
+		padding-bottom: 20rpx;
+		z-index: 99;
+		top: 0;
+		i {
+			transform: scale(1.4);
+		}
+	}
+	::v-deep .el-upload-list__item {
+		&:nth-child(2n) {
+			margin: 0 0 8px 0
+		}
+	}
+	::v-deep .el-upload-list__item-thumbnail {
+		object-fit: cover;
+	}
+	::v-deep .el-upload-list--picture-card {
+		justify-content: space-between;
 	}
 </style>
