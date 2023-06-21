@@ -52,6 +52,7 @@ router.post('/', tokenFn, (req, res) => {
 				})
 			}
 		}).catch((err) => {
+			console.log(err)
 			res.status(500).send(error)
 		})
 	}
@@ -60,14 +61,24 @@ router.post('/', tokenFn, (req, res) => {
 
 router.get('/', (req, res) => {
 	appraisemodel.findOne({essay_id: req.query.id}).then((data) => {
-		res.send({
-			data: {
-				code: 2020,
-				result: data.content
-			}
-		})
+		if(data) {
+			res.send({
+				data: {
+					code: 2020,
+					result: data.content
+				}
+			})
+		}else {
+			res.send({
+				data: {
+					code: 2020,
+					result: []
+				}
+			})
+		}
 	}).catch((err) => {
-		res.send(error)
+		console.log(err)
+		res.status(500).send(error)
 	})
 })
 
