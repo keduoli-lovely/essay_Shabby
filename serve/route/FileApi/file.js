@@ -1,12 +1,13 @@
 const express = require('express')
 const usermodel = require('../../DataBase/model/user.js')
+const tokenFn = require('../fn/tokenFn.js')
 const fs = require('fs')
 const path = require('path')
 
 const router = express.Router()
 
 
-router.post('/', (req, res) => {
+router.post('/',tokenFn, (req, res) => {
 			if (!req.files || Object.keys(req.files).length === 0) {
 			  return res.status(400).send('No files were uploaded.');
 			}
@@ -44,6 +45,5 @@ router.post('/', (req, res) => {
 			})
 	   
 	})
-
 
 module.exports = router
