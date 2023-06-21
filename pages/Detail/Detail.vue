@@ -1,181 +1,186 @@
 <template>
-	<view class="logding" v-loading.fullscreen.lock="fullscreenLoading">
-		
-	</view>
-	<view class="detail" v-if="temporarydata">
-		<el-page-header @back="backtohome" :icon="ArrowLeft">
-		    <template #content>
-		      <span class="text-large font-600 mr-3" style="white-space: nowrap; width: 400rpx; overflow: hidden;text-overflow: ellipsis;display: block;"> {{ temporarydata.title }} </span>
-			<view class="disappointed" @click="Leave">
-				<el-icon><MoreFilled /></el-icon>
-				
-			</view>
-			<view class="move" :style="{bottom: btnMask + 'rpx'}">
-				<view class="delrow" v-if="isRoot" >
-					<el-icon class="icon11" @click.stop="delfn"><Delete /></el-icon>
-					<view class="move-text">
-						删除文章
-					</view>
-				</view>
-				<view class="report" v-else>
-					<el-icon class="icon11"><Warning /></el-icon>
-					<view class="move-text">
-						举报
-					</view>
-				</view>
-			</view>
+	<view class="box-detail">
+		<view class="logding" v-loading.fullscreen.lock="fullscreenLoading">
 			
-		    </template>
-			
-		  </el-page-header>
-		  <view style="height:45rpx">
-		  	
-		  </view>
-		<el-card>
-			
-			<view class="author">
-				<view class="pic">
-					<image :src="temporarydata?.user?.pic" mode="aspectFill"></image>
+		</view>
+		<view class="detail" v-if="temporarydata">
+			<el-page-header @back="backtohome" :icon="ArrowLeft">
+			    <template #content>
+			      <span class="text-large font-600 mr-3" style="white-space: nowrap; width: 400rpx; overflow: hidden;text-overflow: ellipsis;display: block;"> {{ temporarydata.title }} </span>
+				<view class="disappointed" @click="Leave">
+					<el-icon><MoreFilled /></el-icon>
+					
 				</view>
-				
-				<view class="userinfo">
-					<view class="name">
-						{{ temporarydata?.user?.name }}
-					</view>
-					<view class="time">
-						{{ temporarydata?.time?.split('T')[0] }}
-					</view>
-				</view>
-			</view>
-			<view style="height:30rpx"></view>
-			<p class="title" style="word-wrap:break-word;word-break:normal;">
-				{{ temporarydata?.title }}
-			</p>
-			<p style="word-wrap:break-word;word-break:normal;">
-				{{ temporarydata?.text[0] }}
-			</p>
-		</el-card>
-		<view style="height:20rpx"></view>		
-		
-		<el-card>
-			<view class="live-nav">
-				<view class="nav-left">
-					<el-dropdown trigger="click" @command="select">
-						<span class="el-dropdown-link">
-						 回复 {{ testdata?.length}}<el-icon class="el-icon--right"><arrow-down /></el-icon>
-						</span>
-						<template #dropdown>
-						  <el-dropdown-menu >
-							<el-dropdown-item v-for="(item, i) in plsorttext" :key="item" :command="i + 1" >{{ item }}</el-dropdown-item>
-						  </el-dropdown-menu>
-						</template>
-					  </el-dropdown>
-				</view>
-				<view class="nav-right">
-					转发 0
-				</view>
-			</view>
-		</el-card>
-		<view style="height:20rpx"></view>
-		<el-card>
-			<view class="Commentarea">
-				<view class="pl-title">
-					{{ plsorttext[textindex] }}
-				</view>
-				
-				<view class="pl-box" v-for="item in testdata" :key="item.id">
-					<view class="header">
-						<view class="pl-pic">
-							<image :src="item?.pic" mode="aspectFill"></image>
+				<view class="move" :style="{bottom: btnMask + 'rpx'}">
+					<view class="delrow" v-if="isRoot" >
+						<el-icon class="icon11" @click.stop="delfn"><Delete /></el-icon>
+						<view class="move-text">
+							删除文章
 						</view>
-						<view class="pl-text-box">
-							<view class="pl-name">
-								{{ item.name }}
+					</view>
+					<view class="report" v-else>
+						<el-icon class="icon11"><Warning /></el-icon>
+						<view class="move-text">
+							举报
+						</view>
+					</view>
+				</view>
+				
+			    </template>
+				
+			  </el-page-header>
+			  <view style="height:45rpx">
+			  	
+			  </view>
+			<el-card>
+				
+				<view class="author">
+					<view class="pic">
+						<image :src="temporarydata?.user?.pic" mode="aspectFill"></image>
+					</view>
+					
+					<view class="userinfo">
+						<view class="name">
+							{{ temporarydata?.user?.name }}
+						</view>
+						<view class="time">
+							{{ temporarydata?.time?.split('T')[0] }}
+						</view>
+					</view>
+				</view>
+				<view style="height:30rpx"></view>
+				<p class="title" style="word-wrap:break-word;word-break:normal;">
+					{{ temporarydata?.title }}
+				</p>
+				<p style="word-wrap:break-word;word-break:normal;">
+					{{ temporarydata?.text[0] }}
+				</p>
+				
+				<PicListItem v-for="(item, i) in temporarydata?.essaypics" :key="i" :pic="item"></PicListItem>
+			</el-card>
+			<view style="height:20rpx"></view>		
+			
+			<el-card>
+				<view class="live-nav">
+					<view class="nav-left">
+						<el-dropdown trigger="click" @command="select">
+							<span class="el-dropdown-link">
+							 回复 {{ testdata?.length}}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+							</span>
+							<template #dropdown>
+							  <el-dropdown-menu >
+								<el-dropdown-item v-for="(item, i) in plsorttext" :key="item" :command="i + 1" >{{ item }}</el-dropdown-item>
+							  </el-dropdown-menu>
+							</template>
+						  </el-dropdown>
+					</view>
+					<view class="nav-right">
+						转发 0
+					</view>
+				</view>
+			</el-card>
+			<view style="height:20rpx"></view>
+			<el-card v-if="testdata.length > 0">
+				<view class="Commentarea">
+					<view class="pl-title">
+						{{ plsorttext[textindex] }}
+					</view>
+					
+					<view class="pl-box" v-for="item in testdata" :key="item.id">
+						<view class="header">
+							<view class="pl-pic">
+								<image :src="item?.pic" mode="aspectFill"></image>
 							</view>
-							<view class="pl-content">
-								{{ item.text }}
+							<view class="pl-text-box">
+								<view class="pl-name">
+									{{ item.name }}
+								</view>
+								<view class="pl-content">
+									{{ item.text }}
+								</view>
+							</view>
+						</view>
+						
+						<view class="floor-detail">
+							<view class="floor-time">
+								{{ dayjs(item.time).format('MM-DD') }}
+							</view>
+							<view class="floor-btn">
+								<view class="like-btn">
+									<i class="iconfont icon-dianzan_kuai btn-icon"></i> <text class="t22">{{ item?.live?.length || 0 }}</text>
+								</view>
+								<view class="pl-btn">
+									<el-icon class="btn-icon"><ChatDotRound /></el-icon> <text class="t22">0</text>
+								</view>
 							</view>
 						</view>
 					</view>
 					
-					<view class="floor-detail">
-						<view class="floor-time">
-							{{ dayjs(item.time).format('MM-DD') }}
-						</view>
-						<view class="floor-btn">
-							<view class="like-btn">
-								<i class="iconfont icon-dianzan_kuai btn-icon"></i> <text class="t22">{{ item?.live?.length || 0 }}</text>
-							</view>
-							<view class="pl-btn">
-								<el-icon class="btn-icon"><ChatDotRound /></el-icon> <text class="t22">0</text>
-							</view>
-						</view>
-					</view>
 				</view>
-				
-			</view>
-		</el-card>
-		
-		<view class="oter">
-			<view class="inpt-send">
-				<el-icon><EditPen /></el-icon>
-				<view class="keduoli" @click="topl">
-					写回复
-				</view>
-			</view>
+			</el-card>
 			
-			<view class="oter-box">
-				<view class="like" @click="liveEssay">
-					<text class="t11">{{ temporarydata?.live.length }}</text>
-					<view class="icon" :class="islive ? 'atv' : ''">
-						<i class="iconfont icon-dianzan_kuai alicon"></i>
+			<view class="oter">
+				<view class="inpt-send">
+					<el-icon><EditPen /></el-icon>
+					<view class="keduoli" @click="topl">
+						写回复
 					</view>
 				</view>
 				
-				<view class="add">
-					<text class="t11">{{ temporarydata?.star.length }}</text>
-					<view class="icon">
-						<el-icon><StarFilled /></el-icon>
+				<view class="oter-box">
+					<view class="like" @click="liveEssay">
+						<text class="t11">{{ temporarydata?.live.length }}</text>
+						<view class="icon" :class="islive ? 'atv' : ''">
+							<i class="iconfont icon-dianzan_kuai alicon"></i>
+						</view>
 					</view>
-				</view>
-				
-				<view class="give">
-					<text class="t11">{{ temporarydata?.geiv }}</text>
-					<view class="icon">
-						<i class="iconfont icon-fenxiangfangshi alicon"></i>
+					
+					<view class="add">
+						<text class="t11">{{ temporarydata?.star.length }}</text>
+						<view class="icon">
+							<el-icon><StarFilled /></el-icon>
+						</view>
+					</view>
+					
+					<view class="give">
+						<text class="t11">{{ temporarydata?.geiv }}</text>
+						<view class="icon">
+							<i class="iconfont icon-fenxiangfangshi alicon"></i>
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		<!-- // 遮罩 -->
-		<MaskItem :height='height' ></MaskItem>
-		<view class="textarea-click" :style="{bottom: inputState + 'rpx'}">
-			<view class="title-text">
-				<view class="call">
-					回复
+			<!-- // 遮罩 -->
+			<MaskItem :height='height' ></MaskItem>
+			<view class="textarea-click" :style="{bottom: inputState + 'rpx'}">
+				<view class="title-text">
+					<view class="call">
+						回复
+					</view>
+					<view class="push" @click="sendhuifu" :class="textarea.length > 1 ? 'atv' : ''">
+						发布
+					</view>
 				</view>
-				<view class="push" @click="sendhuifu" :class="textarea.length > 1 ? 'atv' : ''">
-					发布
-				</view>
+				<el-input
+					ref="ke"
+				    v-model="textarea"
+				    :rows="2"
+				    type="textarea"
+				    :placeholder="'回复: ' + atname"
+					input-style="height: 100%"
+					maxlength="350"
+					minlength="2"
+					autofocus
+				  />
 			</view>
-			<el-input
-				ref="ke"
-			    v-model="textarea"
-			    :rows="2"
-			    type="textarea"
-			    :placeholder="'回复: ' + atname"
-				input-style="height: 100%"
-				maxlength="350"
-				minlength="2"
-				autofocus
-			  />
+			<!-- // mask -->
+			<interrogate :why="true">
+				您确定要删除吗?
+			</interrogate>
 		</view>
-		<!-- // mask -->
-		<interrogate :why="true">
-			您确定要删除吗?
-		</interrogate>
 	</view>
 </template>
+
 
 <script setup>
 	import { ref, computed, onMounted } from 'vue'
@@ -190,6 +195,7 @@
 	import { Alreadypublish } from '../../store/Usepublish.js'
 	import { getrowEssay } from '../../apis/rowEssay.js'
 	import { onLoad } from "@dcloudio/uni-app"
+	import PicListItem from '../../components/PicListItem/PicListItem.vue'
 	
 	// 获取query参数
 	let essay_id_data = ref(null)
@@ -269,9 +275,7 @@
 	}
 	
 	let backtohome = () => {
-		uni.navigateTo({
-			url: '/pages/index/index'
-		})
+		uni.navigateBack()
 	}
 	let liveEssay = async () => {
 		if(!temporarydata.value._id) return
