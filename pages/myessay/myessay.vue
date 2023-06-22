@@ -37,6 +37,9 @@
 	
 	let { sendAndlive } = storeToRefs(allMaskstates())
 	let { userinfo } = storeToRefs(userDetail())
+	// 列表数据/用户发布的文章
+	let { essay } = storeToRefs(Alreadypublish())
+	let { getEssayList } = Alreadypublish()
 	// 回到主页
 	let back = () => {
 		uni.reLaunch({
@@ -52,6 +55,9 @@
 	// })
 	// 判断是否有数据,没有则返回首页
 	onMounted(() => {
+		if(userinfo.value.token) {
+			getEssayList(userinfo.value.userinfo.Account)
+		}
 		fullscreenLoading.value = false
 		window.scrollTo(0, 0)
 		if(essay.value.length < 1) {
@@ -63,9 +69,7 @@
 	
 	// logding
 	const fullscreenLoading = ref(true)
-	// 列表数据/用户发布的文章
-	let { essay } = storeToRefs(Alreadypublish())
-	let { getEssayList } = Alreadypublish()
+	
 
 	// 跳转到详情页
 	let todetail = (id) => {
