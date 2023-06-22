@@ -40,14 +40,14 @@ router.get('/time', (req, res) => {
 })
 
 router.get('/find', tokenFn, (req, res) => {
-		listdataMOdel.find({user_id: req.query.id}).then((data) => {
+		listdataMOdel.find({user_id: req.query.id}).sort({time: -1}).exec().then((data) => {
 			listdataMOdel.find({live: req.query.id}).then((data1) => {
 				res.send({
 					data: {
 						code: 200,
 						result: {
 							send: data,
-							live: data1
+							live: data1.reverse()
 						}
 					}
 				})
