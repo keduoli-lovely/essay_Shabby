@@ -622,7 +622,7 @@
 			border-radius: 50%;
 			width: 120rpx;
 			height: 120rpx;
-			transition: all .5s ease-out;
+			transition: all .4s ease-in-out;
 			backdrop-filter: blur(.5rpx);
 			background-color: rgba(255,255,255, .6);
 		}
