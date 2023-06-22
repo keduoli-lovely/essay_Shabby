@@ -56,7 +56,7 @@
 					{{ temporarydata?.text[0] }}
 				</p>
 				
-				<PicListItem v-for="(item, i) in temporarydata?.essaypics" :key="i" :pic="item"></PicListItem>
+				<PicListItem :pic="temporarydata?.essaypics"></PicListItem>
 			</el-card>
 			<view style="height:20rpx"></view>		
 			
@@ -232,15 +232,19 @@
 	let { changeStateFn } = allMaskstates()
 	
 	// 当用户刷新页面,数据就会丢失,此时就需要将用户重定向
+	let isnewessay = ref(false)
 	onMounted( async () => {
 		fullscreenLoading.value = false
 		window.scrollTo(0, 0)
-		if(!temporarydata.value) {
+		if(!temporarydata.value || !isnewessay.value ) {
 			if(essay_id_data.value) {
 				let res = await getrowEssay(essay_id_data.value)
 				if(res.data.data.code == 200) {
 					temporarydata.value = res.data.data.result
 					let res1 = await getreply(temporarydata.value._id)
+					if(testdata.value == res1.data.data.result) {
+						isnewessay.value = true
+					}
 					testdata.value = res1.data.data.result
 				}else {
 					uni.reLaunch({
