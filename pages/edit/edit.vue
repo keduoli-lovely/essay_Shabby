@@ -27,6 +27,9 @@
 					type="textarea" placeholder="内容" />
 			</view>
 			
+			<view class="uploadpic">
+				&nbsp;选择图片:
+			</view>
 			<view class="pic_list">
 				<el-upload
 				    v-model:file-list="fileList"
@@ -38,6 +41,7 @@
 					:limit="5"
 					:on-exceed="messagelimit"
 					:headers="token"
+					:before-upload="beforeAvatarUpload"
 				  >
 				    <el-icon><Plus /></el-icon>
 				  </el-upload>
@@ -107,7 +111,16 @@
 	const dialogImageUrl = ref('')
 	const dialogVisible = ref(false)
 	
-
+	const beforeAvatarUpload = (rawFile) => {
+	  if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
+	    ElMessage.error('只能上传 jpg/png')
+	    return false
+	  } else if (rawFile.size / 1024 / 1024 > 2) {
+	    ElMessage.error('大小不能超过 2M')
+	    return false
+	  }
+	  return true
+	}
 	
 	const handlePictureCardPreview = (file) => {
 	  dialogImageUrl.value = file.url
@@ -240,7 +253,12 @@
 				color: #606266;
 			}
 		}
+		.uploadpic {
+			padding: 0 0 20rpx 0;
+			color: rgba(0,0,0,.6);
+		}
 		.pic_list {
+			margin-bottom: 28rpx;
 			padding: 12rpx 10rpx;
 			background-color: #b5cfd8;
 			border-radius: 8rpx;
