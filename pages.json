@@ -65,6 +65,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/searchpage/searchpage",
+            "style" :                                                                       {       
+            "navigationStyle": "custom",
+            "app-plus": {
+            	"titleNView": false
+            }  
+            
+        }
     ],
 	
 	"globalStyle": {

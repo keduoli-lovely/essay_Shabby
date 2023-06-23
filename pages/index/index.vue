@@ -10,9 +10,12 @@
 		<view class="search">
 			<el-input maxlength="15" v-model="input" @input="inputgetkeyword" placeholder="search" clearable />
 			
-			<view class="tips" @mousemove="move" v-if="keyWordData.length > 0 && input?.length > 0">
-				<view class="row-text" :class="colorindex == i ? 'atv' : '' " :data-index="i" v-for="(item, i) in keyWordData" :key="i">
+			<view class="tips" v-if="keyWordData.length > 0 && input?.length > 0">
+				<view class="row-text" @click="todetail(item),input = ''" v-for="(item, i) in keyWordData" :key="i">
 					{{ item.title }}
+				</view>
+				<view class="row-text allrowtext" @click="tosearchpage(input)">
+					搜索: {{ input }}
 				</view>
 			</view>
 		</view>
@@ -227,7 +230,6 @@
 	
 	
 	// 改变颜色
-	let colorindex = ref(-1)
 	// 获取关键字方法
 	let { getkeyword } = keywordFn()
 	let { keyWordData } = storeToRefs(keywordFn())
@@ -295,15 +297,17 @@
 		}
 	}
 	
-	let move = (e) => {
-		colorindex.value = e.target.dataset.index
-	}
-	
 	// 跳转到用户发布的文章页面
 	let tomypush = (s) => {
 		sendAndlive.value = s
 		uni.reLaunch({
 			url: '/pages/myessay/myessay'
+		})
+	}
+	// 跳转到搜索页面
+	let tosearchpage = (key) => {
+		uni.reLaunch({
+			url: `/pages/searchpage/searchpage?key=${key}`
 		})
 	}
 	
@@ -473,6 +477,8 @@
 		}
 	}
 	
+	
+	
 </script>
 
 <style lang="scss" scped>
@@ -503,15 +509,17 @@
 			width: 70%;
 			min-width: 50%;
 			.tips {
+				overflow: hidden;
 				position: absolute;
 				top: 125%;
 				left: 20rpx;
 				width: 340rpx;
-				color: skyblue;
-				background-color: #6b778c;
+				color: #2d2d2d;
+				background-color: #ebedec;
+				// backdrop-filter: blur(5rpx);
 				// border: 1rpx solid rgba(0,0,0,.4);
-				box-shadow: -1rpx -1rpx 4rpx rgba(0,0,0,.4),
-					1rpx 1rpx 4rpx rgba(0,0,0,.4);
+				// box-shadow: -1rpx -1rpx 4rpx rgba(0,0,0,.4),
+				// 	1rpx 1rpx 4rpx rgba(0,0,0,.4);
 				border-radius: 5rpx;
 				.row-text {
 					width: 100%;
@@ -519,9 +527,13 @@
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					padding: 28rpx 24rpx 10rpx;
+					&::hover {
+						background-color: #6b778c;
+					}
 				}
-				.atv {
-					background-color: skyblue;
+				.allrowtext {
+					font-weight: 530;
+					color: #3d3d3b;
 				}
 			}
 		}
