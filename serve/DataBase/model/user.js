@@ -30,6 +30,10 @@ let userSchema = new mongoose.Schema({
 	pic: {
 		type: String,
 		default: 'http://127.0.0.1:3000/default.png'
+	},
+	createTime: {
+		type: Date,
+		default: new Date()
 	}
 })
 
