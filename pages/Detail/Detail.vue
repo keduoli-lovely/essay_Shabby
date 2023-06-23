@@ -129,7 +129,7 @@
 				
 				<view class="oter-box">
 					<view class="like" @click="liveEssay">
-						<text class="t11">{{ temporarydata?.live.length }}</text>
+						<text class="t11">{{ temporarydata?.live?.length || 0 }}</text>
 						<view class="icon" :class="islive ? 'atv' : ''">
 							<i class="iconfont icon-dianzan_kuai alicon"></i>
 						</view>
@@ -292,12 +292,14 @@
 	}
 	let islive = computed(() => {
 		if(userinfo.value.token) {
-			let tmp = temporarydata.value.live.some(item => userinfo.value.userinfo.Account == item)
+			if(!temporarydata.value) return false
+			let tmp = temporarydata.value.live.some(item => userinfo.value.userinfo.Account == item?.userid)
 			return tmp
 		}else {
 			return false
 		}
 	})
+
 	let isRoot = computed(() => {
 		let ifshow = false
 		if(userinfo.value.token) {
