@@ -33,12 +33,10 @@
 	let listpic = defineProps({
 		pic: Array,
 	})
-	
 	// 点击查看大图
 	let seepic = (index) => {
 		picindex.value = index
 		maskisshow.value = 1
-		console.log(index)
 	}
 	// 关闭大图显示
 	let closemaks = (e) => {
