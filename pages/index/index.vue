@@ -99,7 +99,7 @@
 			</view>
 			<view class="communicate" @click="tomypush(true)">
 				<view class="num">
-					{{ essay.live?.length || 0 }}
+					{{ essay?.live?.length || 0 }}
 				</view>
 				<view class="com-text">
 					点赞
