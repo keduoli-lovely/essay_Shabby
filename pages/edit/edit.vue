@@ -74,13 +74,15 @@
 	import { NewuserDetail } from '../../store/getNewuserDetail.js'
 	import { Uselistdata } from '../../store/listdata.js'
 	import { config } from '../../store/config.js'
+	import { Alreadypublish } from '../../store/Usepublish.js'
 	import dayjs from 'dayjs'
 	
 	
 	// 默认配置
 	let { BaseUrl } = storeToRefs(config())
 	let { getuserFn } = NewuserDetail()
-	let { getlistdatafn } = Uselistdata()
+	let { getEssayList } = Alreadypublish()
+	let { getlistdatafn, getlistdatatimefn, getlistdatasoltfn } = Uselistdata()
 	
 	let { userinfo } = storeToRefs(userDetail())
 	if(!userinfo.value.token) {
@@ -162,7 +164,10 @@
 				
 				let res = await AddNews(obj)
 				if(res.data.code == 200) {
+					getEssayList(userinfo.value.userinfo.Account)
 					getlistdatafn()
+					getlistdatatimefn()
+					getlistdatasoltfn()
 					ElMessage.success(res.data.message)
 					uni.reLaunch({
 						url: '/pages/index/index'
