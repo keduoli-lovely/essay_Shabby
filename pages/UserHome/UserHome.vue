@@ -26,8 +26,11 @@
 						头像
 					</view>
 					<view class="pic-box">
-						<view class="pic">
+						<view class="pic" @click="bigpicis = true">
 							<image :src="userinfo.userinfo.pic" mode="aspectFill"></image>
+							<view class="bigpic" v-if="bigpicis" @click.stop="bigpicis = false">
+								<image :src="userinfo.userinfo.pic" mode="aspectFill"></image>
+							</view>
 						</view>
 						
 						<el-icon class="icon-to"><ArrowRight /></el-icon>
@@ -103,17 +106,21 @@ import { allMaskstates } from '../../store/allMaskState.js'
 import { changeusernameApi } from '../../apis/changeuserdetail.js'
 import { Uselistdata } from '../../store/listdata.js'
 import { config } from '../../store/config.js'
+import PicListItem from '../../components/PicListItem/PicListItem.vue'
 
-
+// 大图的显示/隐藏
+let bigpicis = ref(false)
 // 默认地址
 let { BaseUrl } = storeToRefs(config())
 // 获取mask的状态 -- 显示/隐藏
 let { changenameSate } = storeToRefs(allMaskstates())
 // logding
 const fullscreenLoading = ref(true)
+
+
 // 获取用户信息
 let { userinfo } = storeToRefs(userDetail())
-
+let picarray = ref([userinfo.value.userinfo.pic])
 let { getuserFn } = NewuserDetail()
 
 // 获去最新的文章信息
@@ -209,6 +216,11 @@ let backtohome = () => {
 	})
 }
 
+let closebigpic = (is) => {
+	console.log(is)
+	bigpicis.value = is
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -262,6 +274,23 @@ let backtohome = () => {
 						image {
 							width: 100%;
 							height: 100%;
+						}
+						.bigpic {
+							z-index: 999;
+							position: fixed;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							image {
+								border-radius: 14rpx;
+								width: 95%;
+								height: 60%;
+								box-shadow: -8rpx -8rpx 10rpx rgba(0,0,0,.2),8rpx 8rpx 10rpx rgba(0,0,0,.2)
+							}
 						}
 					}
 					.icon-to {
