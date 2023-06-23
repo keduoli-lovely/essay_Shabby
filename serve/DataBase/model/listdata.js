@@ -25,10 +25,18 @@ let listdataSchema = new mongoose.Schema({
 		type: Array,
 		default: []
 	},
-	live: {
-		type: Array,
-		default: []
-	},
+	live: [
+		{
+			userid: {
+				type: String,
+			},
+			time: {
+				type: Date,
+				default: new Date()
+			}
+			
+		}
+	],
 	geiv: {
 		type: Number,
 		default: 0
