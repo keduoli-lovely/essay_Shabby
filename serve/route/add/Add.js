@@ -8,7 +8,7 @@ const router = express.Router()
 
 let pic_list = []
 
-router.post('/',tokenFn , (req, res) => {  
+router.post('/',tokenFn , (req, res) => { 
 	listdataMOdel.create({
 		...req.body,
 		time: req.body.time || new Date(),

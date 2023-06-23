@@ -8,7 +8,13 @@
 			<image v-else :src="userinfo.userinfo.pic" mode="aspectFill"></image>
 		</view>
 		<view class="search">
-			<el-input v-model="input" placeholder="search" clearable />
+			<el-input maxlength="15" v-model="input" @input="inputgetkeyword" placeholder="search" clearable />
+			
+			<view class="tips" @mousemove="move" v-if="keyWordData.length > 0 && input?.length > 0">
+				<view class="row-text" :class="colorindex == i ? 'atv' : '' " :data-index="i" v-for="(item, i) in keyWordData" :key="i">
+					{{ item.title }}
+				</view>
+			</view>
 		</view>
 		
 		<view class="message">
@@ -216,9 +222,15 @@
 	import { Uselistdata } from '../../store/listdata.js'
 	import { useScroll, useInfiniteScroll  } from '@vueuse/core'
 	import { onLoad, onPullDownRefresh, onReachBottom } from "@dcloudio/uni-app"
+	import { keywordFn } from '../../store/keywordsearch.js'
 	import { ElMessage } from 'element-plus'
 	
 	
+	// 改变颜色
+	let colorindex = ref(-1)
+	// 获取关键字方法
+	let { getkeyword } = keywordFn()
+	let { keyWordData } = storeToRefs(keywordFn())
 	// 编辑状态的切换
 	let isshowedit = ref(true)
 	// logding
@@ -265,7 +277,27 @@
 	})
 	const { x, y } = useScroll(window)
 	
+	// 输入框关键字
 	const input = ref('')
+	// 获取关键字相关数据
+	let timer = ref(null)
+	function inputgetkeyword(key) {
+		if(!input.value) {
+			keyWordData.value = []
+		}
+		if(timer.value) {
+			clearTimeout(timer.value)
+			timer.value = null
+		}else {
+			timer.value = setTimeout(() => {
+				getkeyword(key)
+			}, 1000)
+		}
+	}
+	
+	let move = (e) => {
+		colorindex.value = e.target.dataset.index
+	}
 	
 	// 跳转到用户发布的文章页面
 	let tomypush = (s) => {
@@ -467,8 +499,31 @@
 			}
 		}
 		.search {
+			position: relative;
 			width: 70%;
 			min-width: 50%;
+			.tips {
+				position: absolute;
+				top: 125%;
+				left: 20rpx;
+				width: 340rpx;
+				color: skyblue;
+				background-color: #6b778c;
+				// border: 1rpx solid rgba(0,0,0,.4);
+				box-shadow: -1rpx -1rpx 4rpx rgba(0,0,0,.4),
+					1rpx 1rpx 4rpx rgba(0,0,0,.4);
+				border-radius: 5rpx;
+				.row-text {
+					width: 100%;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					padding: 28rpx 24rpx 10rpx;
+				}
+				.atv {
+					background-color: skyblue;
+				}
+			}
 		}
 		.message {
 			padding-top: 14rpx;

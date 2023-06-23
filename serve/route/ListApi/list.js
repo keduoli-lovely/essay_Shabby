@@ -137,6 +137,21 @@ router.get('/row', (req, res) => {
 	})
 })
 
-
+router.get('/keyword', (req, res) => {
+	let keyword = req.query.key
+	let reg = new RegExp(keyword, 'i')
+	let filter = {
+		$or: [
+			{title: reg},
+			{text: reg}
+		]
+	}
+	listdataMOdel.find(filter).exec().then(data => {
+		res.send(data)
+	}).catch(err => {
+		console.log(err)
+		res.status(500).send(error)
+	})
+})
 
 module.exports = router

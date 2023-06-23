@@ -7,10 +7,12 @@ let listdataSchema = new mongoose.Schema({
 	},
 	title: {
 		type: String,
+		index: 'text',
 		required: true,
 	},
 	text: {
 		type: [String, Number],
+		index: 'text',
 		required: true
 	},
 	user: {
