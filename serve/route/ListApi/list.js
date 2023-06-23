@@ -41,21 +41,24 @@ router.get('/time', (req, res) => {
 
 router.get('/find', tokenFn, (req, res) => {
 		listdataMOdel.find({user_id: req.query.id}).sort({time: -1}).exec().then((data) => {
-			listdataMOdel.find({live: req.query.id}).then((data1) => {
+			listdataMOdel.find({"live.userid": req.query.id}).sort({time: -1}).exec().then(data1 => {
 				res.send({
 					data: {
 						code: 200,
 						result: {
 							send: data,
-							live: data1.reverse()
+							live: data1
 						}
 					}
-				})
-			}).catch((err) => {
+				})			
+			
+			}).catch(err => {
+				console.log(err, 1233)
 				res.status(500).send(error)
 			})
-			
+				
 		}).catch((err) => {
+			console.log(err, 222)
 			res.status(500).send(error)
 		})
 	
@@ -65,21 +68,27 @@ router.post('/star', tokenFn, (req, res) => {
 		listdataMOdel.findOne({_id: req.body.id}).then((data) => {
 			let is_live = false
 			if(data.live.length <= 0) {
-				data.live.unshift(res.state1)
+				data.live.unshift({
+					userid: res.state1,
+					time: new Date()
+				})
 				is_live = true
 			}else {
 				data.live = [...new Set(data.live)]
 				data.live.forEach((item, i) => {
-					if(item == res.state1) {
+					if(item.userid == res.state1) {
 						data.live.splice(i ,1)
 					}else {
-						data.live.unshift(res.state1)
+						data.live.unshift({
+							userid: res.state1,
+							time: new Date()
+						})
 						is_live = true
 					}
 				})
 			}
 			res.count = [...new Set(data.live)]
-			listdataMOdel.findOne({_id: req.body.id}).updateOne({live: data.live}).then((data) => {
+			listdataMOdel.findOne({_id: req.body.id}).updateOne({live: res.count}).then((data) => {
 				res.status(201).send({
 					data: {
 						code: 201,
