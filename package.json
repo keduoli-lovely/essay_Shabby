@@ -13,7 +13,9 @@
     "koa": "^2.14.2",
     "koa-body": "^6.0.1",
     "md5": "^2.3.0",
-    "mongoose": "^7.2.2"
+    "mongoose": "^7.2.2",
+    "socket.io": "^4.7.0",
+    "socket.io-client": "^4.7.0"
   },
   "devDependencies": {
     "unplugin-auto-import": "^0.16.4",

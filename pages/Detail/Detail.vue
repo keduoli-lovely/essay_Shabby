@@ -613,6 +613,3 @@
 	}
 	
 </style>
-.navigateBackMiniProgram({
-	<custom-tab-bar direction="" :show-icon="" :selected="" @onTabItemTap="" />
-})

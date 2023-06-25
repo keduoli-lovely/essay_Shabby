@@ -18,6 +18,7 @@ import * as Pinia from 'pinia';
 
 export function createApp() {
 	const app = createSSRApp(App);
+	
 	for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 	  app.component(key, component)
 	}

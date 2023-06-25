@@ -20,7 +20,7 @@
 			</view>
 		</view>
 		
-		<view class="message">
+		<view class="message" @click="tomessage">
 			<el-icon><Message /></el-icon>
 		</view>
 	</header>
@@ -296,7 +296,19 @@
 			}, 1000)
 		}
 	}
-	
+	// 跳转到聊天
+	let tomessage = () => {
+		if(!userinfo.value.token) {
+			uni.reLaunch({
+				url: '/pages/login/login'
+			})
+			
+			return
+		}
+		uni.reLaunch({
+			url: '/pages/chat/chat'
+		})
+	}
 	// 跳转到用户发布的文章页面
 	let tomypush = (s) => {
 		sendAndlive.value = s
@@ -467,7 +479,7 @@
 			}, 500)
 			ElMessage({
 			    showClose: true,
-			    message: '已经是最新!',
+			    message: '没有更多了 !',
 			  })
 		}else {
 			setTimeout(() => {

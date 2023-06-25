@@ -12,6 +12,7 @@ const Home = require('./route/HomeApi/home.js')
 const File = require('./route/FileApi/file.js')
 const Reply = require('./route/ReplyApi/reply.js')
 const Del = require('./route/DeleteEssay/del.js')
+const Message = require('./route/dialogue/dialogue.js')
 
 const Add = require('./route/add/Add.js')
 const dbfn = require('./DataBase/db.js')
@@ -44,6 +45,7 @@ dbfn(() => {
 	app.use('/home', verify, Home)
 	app.use('/add', Add)
 	app.use('/del', Del)
+	app.use('/message', Message)
 	app.get('/', (req, res) => {
 		res.send('index')
 	})

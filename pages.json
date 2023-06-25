@@ -67,11 +67,24 @@
         }
         ,{
             "path" : "pages/searchpage/searchpage",
-            "style" :                                                                       {       
-            "navigationStyle": "custom",
-            "app-plus": {
-            	"titleNView": false
-            }  
+            "style": {
+            	"navigationStyle": "custom",
+            	"app-plus": {
+            		"titleNView": false
+            	}
+            
+            } 
+            
+        }
+        ,{
+            "path" : "pages/chat/chat",
+           "style": {
+           	"navigationStyle": "custom",
+           	"app-plus": {
+           		"titleNView": false
+           	}
+           
+           } 
             
         }
     ],
