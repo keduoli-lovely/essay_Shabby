@@ -19,6 +19,11 @@
 	import { userDetail } from '../../store/UseuserDetail.js'
 	import { Alreadypublish } from '../../store/Usepublish.js'
 	import { ElMessage } from 'element-plus'
+	import { Uselistdata } from '../../store/listdata.js'
+	
+	
+	
+	let { getlistdatafn, getlistdatatimefn, getlistdatasoltfn } = Uselistdata()	
 	
 	let delandout = defineProps({
 		why: Boolean
@@ -41,6 +46,9 @@
 					changenameSate.value = false
 					changeloginState.value = false
 					ElMessage.success('删除成功')
+					getlistdatafn()
+					getlistdatatimefn()
+					getlistdatasoltfn()
 					btnMask.value = -500
 					uni.reLaunch({
 						url: '/pages/index/index'
