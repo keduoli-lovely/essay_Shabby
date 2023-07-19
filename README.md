@@ -32,6 +32,7 @@ DBPORT: 27017,		   // mongodb的端口
 DBNAME: 'keduoli'      // mongodb的数据库名称
 ```
 
++ `npm i -g nodemon` 安装依赖
 + `npm i` 安装依赖
 + `npm run dev` 启动服务器
 
