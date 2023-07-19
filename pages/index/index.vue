@@ -25,7 +25,7 @@
 		</view>
 	</header>
 	
-	<nav class="navs">
+	<nav class="navs" @touchmove="navsmove">
 		 <el-tabs v-model="activeName" class="demo-tabs" @tab-change="newcon">
 				 <el-tab-pane label="推荐" name="1">
 					 <CardItem v-for="item in Storelistdata" :key="item._id" :listdata="item" @click="todetail(item)"></CardItem>
@@ -138,8 +138,19 @@
 						</view>
 					</view>
 				</view>
-				<view class="move-list" @click="tologin">
-					<view class="move-row">
+				
+				<view class="move-list">
+					<view class="move-row" @click="topicpage">
+						<el-icon class="mess"><Picture /></el-icon>
+						&nbsp;&nbsp;&nbsp;图片
+						<view class="todirection">
+							<el-icon><ArrowRight /></el-icon>
+						</view>
+					</view>
+				</view>
+				
+				<view class="move-list">
+					<view class="move-row" @click="tologin">
 						<el-icon class="mess"><Document /></el-icon>&nbsp;&nbsp;&nbsp;编辑资料
 						<view class="todirection">
 							<el-icon><ArrowRight /></el-icon>
@@ -176,7 +187,7 @@
 		<view class="edit-sele-state" v-show="isshowedit" @click.stop="showmask">
 			<el-icon><Edit /></el-icon>
 		</view>
-		<view class="round" @click.stop="closemask" :style="{transform: `scale(${magnify})`}">
+		<view class="round" @click.stop="closemask" id="roundmove" :style="{transform: `scale(${magnify})`}">
 			
 		</view>
 		
@@ -185,7 +196,7 @@
 					<view class="sendessay" id="toedit" @click.stop="toEdit">
 						<i class="iconfont icon-xieboke icon1"></i>发文章
 					</view>
-					<view class="freepic">
+					<view class="freepic" @click.stop="topicpage">
 						<i class="iconfont icon-pic icon1"></i>分享图片
 					</view>
 				</view>
@@ -228,6 +239,8 @@
 	import { keywordFn } from '../../store/keywordsearch.js'
 	import { ElMessage } from 'element-plus'
 	
+	// 实现停止底部页面滑动
+	// let stopFloorScroll = ref(true)
 	
 	// 改变颜色
 	// 获取关键字方法
@@ -381,6 +394,12 @@
 			})
 		}
 	}
+	// 跳转到图片页面
+	let topicpage = () => {
+		uni.reLaunch({
+			url: '/pages/picPage/picPage'
+		})
+	}
 	// 获取最新的数据
 	let newcon = (e) => {
 		pageIndex.value = e
@@ -489,11 +508,20 @@
 		}
 	}
 	
-	
+	// 停止遮罩默认滑动事件
+	// let moveevent = (e) => {
+	// 	console.log(e.target.id)
+	// 	if(e.target.id == 'roundmove') {
+	// 		let navsmove = (self) => {
+	// 			console.log(111, self)
+	// 		} 
+	// 		e.preventDefault()
+	// 	}
+	// }
 	
 </script>
 
-<style lang="scss" scped>
+<style lang="scss" scoped>
 	.atv {
 		box-shadow: 4rpx 4rpx 8rpx rgba(0,0,0,.4);
 	}
@@ -695,6 +723,7 @@
 		border-radius: 50%;
 		background-color: transparent;
 		.round {
+			
 			z-index: 99;
 			position: absolute;
 			top: 0;
