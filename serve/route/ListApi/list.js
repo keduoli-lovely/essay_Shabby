@@ -146,8 +146,19 @@ router.get('/keyword', (req, res) => {
 			{text: reg}
 		]
 	}
+	let useror = {
+		name: reg
+	}
 	listdataMOdel.find(filter).exec().then(data => {
-		res.send(data)
+		usermodel.find(useror).exec().then(user => {
+			res.send({
+				data,
+				user
+			})
+		}).catch(err => {
+			res.status(500).send(error)
+		})
+		
 	}).catch(err => {
 		console.log(err)
 		res.status(500).send(error)

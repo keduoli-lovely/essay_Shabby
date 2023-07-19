@@ -8,13 +8,21 @@
 			<image v-else :src="userinfo.userinfo.pic" mode="aspectFill"></image>
 		</view>
 		<view class="search">
-			<el-input maxlength="15" v-model="input" @input="inputgetkeyword" placeholder="search" clearable />
+			<el-input maxlength="15" 
+				v-model="input" 
+				@input="inputgetkeyword" 
+				placeholder="search"
+				clearable
+				@keyup.enter="tosearchpage(input)" 
+				/>
 			
-			<view class="tips" v-if="keyWordData.length > 0 && input?.length > 0">
+			<view class="tips" v-if="input">
 				<view class="row-text" @click="todetail(item),input = ''" v-for="(item, i) in keyWordData" :key="i">
 					{{ item.title }}
 				</view>
-				<view class="row-text allrowtext" @click="tosearchpage(input)">
+				<view class="row-text allrowtext" 
+					@click="tosearchpage(input)" 
+				>
 					搜索: {{ input }}
 				</view>
 			</view>
@@ -306,7 +314,7 @@
 		}else {
 			timer.value = setTimeout(() => {
 				getkeyword(key)
-			}, 1000)
+			}, 600)
 		}
 	}
 	// 跳转到聊天
@@ -331,6 +339,7 @@
 	}
 	// 跳转到搜索页面
 	let tosearchpage = (key) => {
+		input.value = ''
 		uni.reLaunch({
 			url: `/pages/searchpage/searchpage?key=${key}`
 		})

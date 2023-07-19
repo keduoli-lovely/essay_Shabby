@@ -11,9 +11,8 @@ export const keywordFn = defineStore('keywords', () => {
 	
 	let getkeyword = async (key) => {
 		let res = await keyword(key)
-		
 		keyWordDataAll.value = res.data
-		keyWordData.value = res.data.slice(0, 5)
+		keyWordData.value = res.data.data.slice(0, 5)
 	}
 	
 	
