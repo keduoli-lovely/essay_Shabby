@@ -1,8 +1,10 @@
 // 用于管理用户数据,也提供退出方法
-
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { ref, watch  } from 'vue'
 import { login } from '../apis/login.js'
+import { Alreadypublish } from './Usepublish.js'
+
+
 
 export const userDetail = defineStore('user', () => {
 	
@@ -26,6 +28,8 @@ export const userDetail = defineStore('user', () => {
 	
 	// 退出登入
 	let outloginpop = () => {
+		let { essay } = storeToRefs(Alreadypublish())
+		essay.value = []
 		userinfo.value = ''
 		uni.removeStorageSync('userinfo')
 	}

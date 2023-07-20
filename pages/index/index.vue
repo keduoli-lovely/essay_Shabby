@@ -69,13 +69,13 @@
 			</view>
 			<view class="username">
 				<view class="name" @click.stop='changename'>
-					{{ user.name }}&nbsp;&nbsp;<el-icon ><EditPen /></el-icon>
+					未登入&nbsp;&nbsp;<el-icon ><EditPen /></el-icon>
 				</view>
 				<span class="status">
-					权限: {{ user.root ? '管理员' : '平民' }}
+					权限: 未登入
 				</span>
 				<view class="age">
-					年龄: {{ user.age }}
+					年龄: 未登入
 				</view>
 			</view>
 			
@@ -139,7 +139,7 @@
 				</view>
 				
 				<view class="move-list">
-					<view class="move-row">
+					<view class="move-row" @click="textpage">
 						<el-icon class="mess"><Message /></el-icon>&nbsp;&nbsp;&nbsp;我的消息
 						<view class="todirection">
 							<el-icon><ArrowRight /></el-icon>
@@ -249,6 +249,13 @@
 	
 	// 实现停止底部页面滑动
 	// let stopFloorScroll = ref(true)
+	
+	let textpage = () => {
+		uni.reLaunch({
+			url: '/pages/Home/Home'
+		})
+	}
+	
 	
 	// 改变颜色
 	// 获取关键字方法

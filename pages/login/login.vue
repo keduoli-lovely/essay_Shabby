@@ -8,7 +8,13 @@
 				</el-form-item>
 				
 				 <el-form-item label="密码" prop="password" >
-				      <el-input v-model="form.password" show-password type="passwordword" autocomplete="off" />
+				      <el-input 
+						v-model="form.password" 
+						show-password 
+						type="passwordword" 
+						autocomplete="off"
+						@keyup.enter="onSubmit(formdata)"
+					/>
 				    </el-form-item>
 					
 					
@@ -110,14 +116,15 @@
 					let userinfo = uni.getStorageSync('userinfo')
 					getEssayList(userinfo.userinfo.Account)
 					ElMessage.success(data)
+					getuserFn()
+					uni.reLaunch({
+						url: '/pages/index/index'
+					})
 				}).catch((err) => {
 					ElMessage.error('出错了')
 				})
 				
-				getuserFn()
-				uni.reLaunch({
-					url: '/pages/index/index'
-				})
+				
 			}else {
 				ElMessage.error('有内容未填写')
 			}

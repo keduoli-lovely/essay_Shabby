@@ -98,6 +98,15 @@
            } 
             
         }
+        ,{
+            "path" : "pages/Home/Home",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	
 	"globalStyle": {
