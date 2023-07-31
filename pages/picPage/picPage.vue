@@ -29,7 +29,7 @@
 		</view>
 	</view>
 	
-	<view class="content-body">
+	<view class="content-body" v-if="list.length">
 		
 		<!-- 图片小组件 -->
 		
@@ -43,10 +43,10 @@
 	import { ref, onMounted } from 'vue'
 	
 	let list = [
-		"http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg",
-		"http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg",
-		"http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg",
-		"http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg"
+		// "http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg",
+		// "http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg",
+		// "http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg",
+		// "http://127.0.0.1:3000/a3d32ecdbfe12e605a319dceeb2db975a3d32ecdbfe12e605a319dceeb2db97514.jpg"
 	]
 	
 	// logding

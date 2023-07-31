@@ -1,7 +1,7 @@
 <template>
 	<view class="home">
 		<pageHeader 
-			:path="'/pages/picPage/picPage'"
+			:path="path"
 			:title="'个人中心'"
 		></pageHeader>
 		
@@ -10,27 +10,30 @@
 		</view>
 		
 		<view class="user-bg">
-			<image src="../../serve/public/5e16a6ce67604727becb241ead6c5a20.jpg" mode="widthFix"></image>
+			<view class="mask-bg">
+				
+			</view>
+			<image :src="userdetail?.pic" mode="widthFix"></image>
 		</view>
 		
 		<view class="user-info">
 			<view class="userdetail">
 				<view class="user-pic">
-					<image src="../../serve/public/33dcdcd948984696a88dcc94a1439ee4.png" mode="aspectFill"></image>
+					<image :src="userdetail?.pic" mode="aspectFill"></image>
 				</view>
 				<view class="user-name">
-					珂朵莉
+					{{ userdetail.name }}
 				</view>
 				
 				<view class="about">
 					<view class="love">
-						1 关注
+						1 <text class="nav-text">关注</text>
 					</view>
 					<view class="live">
-						1 点赞
+						1 <text class="nav-text">点赞</text>
 					</view>
 					<view class="star">
-						1 收藏
+						1 <text class="nav-text">收藏</text>
 					</view>
 				</view>
 				
@@ -88,11 +91,28 @@
 
 <script setup>
 import { ref } from 'vue'
-import pageHeader from '../../components/pageHeader/pageHeader.vue'
-import IndexCom from './components/index.vue'
-import LiveCom from './components/live.vue'
-import StarCom from './components/star.vue'
+import { onLoad } from "@dcloudio/uni-app";
+import pageHeader from '../../components/pageHeader/pageHeader.vue';
+import IndexCom from './components/index.vue';
+import LiveCom from './components/live.vue';
+import StarCom from './components/star.vue';
+import { finddata } from '../../apis/finddata.js'
 
+
+// 获取id&用户信息
+let userdetail = ref('')
+let path = ref('/pages/index/index')
+onLoad( async (id) => {
+	if(id.userid) {
+		let res = await finddata(id.userid)
+		userdetail.value = res.data.result
+		path.value = '/pages/searchpage/searchpage'
+	}else {
+		uni.reLaunch({
+			url: '/pages/index/index'
+		})
+	}
+})
 
 // 切换状态
 let indexState = ref(0)
@@ -107,17 +127,29 @@ let changenav = (e) => {
 <style lang="scss" scoped>
 	.home {
 		.user-bg {
+			position: relative;
+			top: -100rpx;
 			width: 100%;
 			image {
+				z-index: -1;
 				width: 100%;
 				display: block;
+			}
+			.mask-bg {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				inset: 0;
+				background-color: rgba(0,0,0, .1);
 			}
 		}
 		
 		.user-info {
 			position: fixed;
-			background-color: skyblue;
-			top: 30%;
+			background-color: #FFDEE9;
+			background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+
+			top: 25%;
 			width: 100%;
 			height: 100vh;
 			padding-top: 30%;
@@ -130,7 +162,10 @@ let changenav = (e) => {
 				transform: translateX(-50%);
 				width: 90%;
 				height: 340rpx;
-				background-color: rgba(0, 0, 0, .5);
+				// background-color: lightblue;
+				background-color: #63cdda;
+				background-image: linear-gradient(80deg, #8EC5FC 20%, #7ed6df 100%);
+				box-shadow: 2rpx 2rpx 10rpx rgba(0,0,0, .2);
 				border-radius: 14rpx;
 				
 				.user-pic {
@@ -157,6 +192,10 @@ let changenav = (e) => {
 					justify-content: center;
 					.live {
 						padding: 0 50rpx;
+					}
+					.nav-text {
+						opacity: .6;
+						font-size: 24rpx;
 					}
 				}
 				
@@ -196,7 +235,8 @@ let changenav = (e) => {
 				
 				.atv-item {
 					padding-bottom: 8rpx;
-					border-bottom: 6rpx solid seagreen;
+					color: #303952;
+					border-bottom: 6rpx solid #596275;
 				}
 			}
 			
@@ -210,7 +250,8 @@ let changenav = (e) => {
 	  }
 	}
 	
-	.nav {
+	::v-deep .nav {
 		margin-bottom: 0;
+		background-color: transparent;
 	}
 </style>

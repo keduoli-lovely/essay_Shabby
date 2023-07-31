@@ -19,6 +19,7 @@ const dbfn = require('./DataBase/db.js')
 const voucherisout = require('./route/fn/voucherisout.js')
 const verify = require('./route/fn/isloginFn.js')
 const tokenFn = require('./route/fn/tokenFn.js')
+const Find = require('./route/FindData/find.js')
 
 const app = express()
 
@@ -38,7 +39,8 @@ dbfn(() => {
 	app.use(express.static(path.join(__dirname, 'public')))
 	
 	
-	app.use('/upload', tokenFn, File);
+	app.use('/upload', tokenFn, File)
+	app.use('/find', Find)
 	app.use('/list', List)
 	app.use('/login', User)
 	app.use('/reply', Reply)
@@ -54,7 +56,7 @@ dbfn(() => {
 	})
 	
 	app.listen(3000, () => {
-		console.log('ok1')
+		console.log('ok')
 	})
 })
 

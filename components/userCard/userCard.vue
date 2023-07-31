@@ -1,5 +1,5 @@
 <template>
-	<view class="usercard" @click="senduserid(userInfoList._id)">
+	<view class="usercard" @click="senduserid(userInfoList.Account)">
 		<el-card body-style="height: auto">
 			<view class="userdetail">
 				<view class="user-pic">
@@ -39,6 +39,7 @@
 		userInfoList: Object
 	})
 	
+	
 	let emit = defineEmits(['tipsUserId'])
 	
 	let tips = computed(() => {
@@ -65,6 +66,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.usercard {
+		margin-bottom: 30rpx;
+	}
 	.userdetail {
 		margin-bottom: 30rpx;
 		display: flex;

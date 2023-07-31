@@ -53,8 +53,10 @@
 	import { keywordFn } from '../../store/keywordsearch.js'
 	import { onLoad } from "@dcloudio/uni-app"
 	import userCard from '../../components/userCard/userCard.vue'
+	import { routerhis } from '../../store/UseRouterPath.js'
 	
-	
+	// path
+	let { changePathFn } = routerhis()
 	// title 文本
 	let titletext = ref('')
 	// 获取搜索数据
@@ -86,7 +88,15 @@
 	}
 	let touserhome = (id) => {
 		// 用户id, 用户中心没有写,暂时不做下一步
-		console.log(id)
+		// console.log(id)
+		if(id) {
+			changePathFn('/pages/searchpage/searchpage')
+			uni.navigateTo({
+				"animationType": 'slide-in-left',
+				url: `/pages/Home/Home?userid=${id}`,
+				"animationDuration": 300
+			})
+		}
 	}
 	
 	// 返回
