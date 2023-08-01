@@ -20,6 +20,7 @@ const voucherisout = require('./route/fn/voucherisout.js')
 const verify = require('./route/fn/isloginFn.js')
 const tokenFn = require('./route/fn/tokenFn.js')
 const Find = require('./route/FindData/find.js')
+const pic = require('./route/picApi/pic.js')
 
 const app = express()
 
@@ -38,7 +39,7 @@ dbfn(() => {
 	app.use(fileUpload());
 	app.use(express.static(path.join(__dirname, 'public')))
 	
-	
+	app.use('/pic', pic)
 	app.use('/upload', tokenFn, File)
 	app.use('/find', Find)
 	app.use('/list', List)

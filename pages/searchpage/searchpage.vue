@@ -67,6 +67,9 @@
 	})
 
 	onMounted(() => {
+		if(!titletext.value) {
+			titletext.value = uni.getStorageSync('search')
+		}
 		// 判断是否有数据
 		if(!keyWordDataAll?.value.data && !keyWordDataAll?.value.user) {
 			if(titletext.value) {
@@ -90,6 +93,7 @@
 		// 用户id, 用户中心没有写,暂时不做下一步
 		// console.log(id)
 		if(id) {
+			uni.setStorageSync('search', titletext.value)
 			changePathFn('/pages/searchpage/searchpage')
 			uni.navigateTo({
 				"animationType": 'slide-in-left',

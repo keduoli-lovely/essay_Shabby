@@ -8,12 +8,12 @@
 		<el-icon><MoreFilled /></el-icon>
 	</view>
 	
-	<view class="select-box" v-if="maskstatus">
+	<view class="select-box" v-show="maskstatus">
 		<view class="select" v-if="true">
 			<view class="row-sel" @click="touserDetail">
 				编辑资料
 			</view>
-			<view class="row-sel">
+			<view class="row-sel" id="topel">
 				更换背景
 			</view>
 		</view>
@@ -31,13 +31,51 @@
 </template>
 
 <script setup>
-	import { ref } from 'vue'
+	import { ref, nextTick, onMounted } from 'vue'
 	import { routerhis } from '../../store/UseRouterPath.js'
 	import { storeToRefs } from 'pinia'
+	import { sendpic, getpicurl } from '../../apis/sendpic.js'
+	import { ElMessage } from 'element-plus'
+	import { userDetail } from '../../store/UseuserDetail.js'
 	
 	
+	// bg图片inp
+	let { changebgpic } = userDetail()
+
 	// mask的状态
 	let maskstatus = ref(false)
+	
+	onMounted(() => {
+		let topel = document.querySelector("#topel")
+		let inp = document.createElement('input')
+		inp.type = 'file',
+		inp.accept = 'image/*',
+		inp.id = 'pic',
+		inp.style.cssText = `
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			inset: 0;
+			opacity: 0;
+		`
+		inp.addEventListener("change", async (e) => {
+			let data = e.target.files[0]
+			if (data && data.type.startsWith("image/")) {
+				let formdata = new FormData()
+				formdata.append('pic', data)
+				
+				let res = await sendpic(formdata)
+				
+				if(res.data.code == 20040) {
+					ElMessage.success('更换成功')
+					let respic = await getpicurl()
+					changebgpic(respic.data.url)
+					maskstatus.value = false
+				}
+			}
+		})
+		topel.appendChild(inp)
+	})
 	
 	let showselect = () => {
 		maskstatus.value = !maskstatus.value
@@ -58,6 +96,7 @@
 	}
 	
 	let topage = () => {
+		console.log()
 		if(props.path) {
 			if(pathUrl.value) {
 				uni.reLaunch({
@@ -114,6 +153,7 @@
 		background-color: rgba(255, 255, 255, .8);
 		font-size: 26rpx;
 		.row-sel {
+			position: relative;
 			text-align: center;
 			line-height: 80rpx;
 		}

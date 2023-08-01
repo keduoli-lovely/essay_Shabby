@@ -140,7 +140,7 @@
 				
 				<view class="move-list">
 					<view class="move-row" @click="textpage">
-						<el-icon class="mess"><Message /></el-icon>&nbsp;&nbsp;&nbsp;我的消息
+						<el-icon class="mess"><HomeFilled /></el-icon>&nbsp;&nbsp;&nbsp;个人中心
 						<view class="todirection">
 							<el-icon><ArrowRight /></el-icon>
 						</view>
@@ -246,16 +246,14 @@
 	import { onLoad, onPullDownRefresh, onReachBottom } from "@dcloudio/uni-app"
 	import { keywordFn } from '../../store/keywordsearch.js'
 	import { ElMessage } from 'element-plus'
+	import { routerhis } from '../../store/UseRouterPath.js'
+	
+	
+	// path
+	let { changePathFn } = routerhis()
 	
 	// 实现停止底部页面滑动
 	// let stopFloorScroll = ref(true)
-	
-	let textpage = () => {
-		uni.reLaunch({
-			url: '/pages/Home/Home'
-		})
-	}
-	
 	
 	// 改变颜色
 	// 获取关键字方法
@@ -337,6 +335,22 @@
 			url: '/pages/chat/chat'
 		})
 	}
+	// 跳转到用户中心
+	let textpage = () => {
+		if(userinfo.value.token) {
+			changePathFn('/pages/index/index')
+			uni.reLaunch({
+				url: `/pages/Home/Home?userid=${userinfo.value.userinfo.Account}`
+			})
+		}else {
+			uni.reLaunch({
+				url: '/pages/login/login'
+			})
+		}
+		
+		
+	}
+	
 	// 跳转到用户发布的文章页面
 	let tomypush = (s) => {
 		sendAndlive.value = s

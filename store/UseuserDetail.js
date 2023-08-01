@@ -10,6 +10,8 @@ export const userDetail = defineStore('user', () => {
 	
 	const userinfo = ref(uni.getStorageSync('userinfo'))
 	
+	const userbgpic = ref(`http://127.0.0.1:3000/bg.jpg`)
+	
 	if(userinfo.value) {
 		watch(userinfo.value, (newValue, oldValue) => {
 			userinfo.value = newValue
@@ -34,9 +36,16 @@ export const userDetail = defineStore('user', () => {
 		uni.removeStorageSync('userinfo')
 	}
 	
+	// 更换背景图片
+	let changebgpic = (url) => {
+		userbgpic.value = url
+	}
+	
 	return {
 		userinfo,
 		loginandgetinfo,
-		outloginpop
+		outloginpop,
+		userbgpic,
+		changebgpic
 	}
 });

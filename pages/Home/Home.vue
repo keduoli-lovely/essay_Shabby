@@ -13,7 +13,7 @@
 			<view class="mask-bg">
 				
 			</view>
-			<image :src="userdetail?.pic" mode="widthFix"></image>
+			<image :src="userbgpic" mode="widthFix"></image>
 		</view>
 		
 		<view class="user-info">
@@ -97,21 +97,32 @@ import IndexCom from './components/index.vue';
 import LiveCom from './components/live.vue';
 import StarCom from './components/star.vue';
 import { finddata } from '../../apis/finddata.js'
+import { userDetail } from '../../store/UseuserDetail.js'
+import { storeToRefs } from 'pinia'
+import { getpicurl } from '../../apis/sendpic.js'
 
+
+
+// 用户中i心背景图
+let { userbgpic } = storeToRefs(userDetail())
+
+let { changebgpic } = userDetail()
 
 // 获取id&用户信息
 let userdetail = ref('')
 let path = ref('/pages/index/index')
-onLoad( async (id) => {
-	if(id.userid) {
-		let res = await finddata(id.userid)
+onLoad( async ({userid}) => {
+	if(userid) {
+		let res = await finddata(userid)
 		userdetail.value = res.data.result
-		path.value = '/pages/searchpage/searchpage'
 	}else {
 		uni.reLaunch({
 			url: '/pages/index/index'
 		})
 	}
+	
+	let userbgurl = await getpicurl(userid)
+	changebgpic(userbgurl.data.url)
 })
 
 // 切换状态
@@ -146,9 +157,7 @@ let changenav = (e) => {
 		
 		.user-info {
 			position: fixed;
-			background-color: #FFDEE9;
-			background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
-
+			background-color: skyblue;
 			top: 25%;
 			width: 100%;
 			height: 100vh;
@@ -162,9 +171,7 @@ let changenav = (e) => {
 				transform: translateX(-50%);
 				width: 90%;
 				height: 340rpx;
-				// background-color: lightblue;
-				background-color: #63cdda;
-				background-image: linear-gradient(80deg, #8EC5FC 20%, #7ed6df 100%);
+				background-color: rgba(51,204,255, .35);
 				box-shadow: 2rpx 2rpx 10rpx rgba(0,0,0, .2);
 				border-radius: 14rpx;
 				
