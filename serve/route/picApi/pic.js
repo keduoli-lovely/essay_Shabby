@@ -22,8 +22,6 @@ router.post('/',tokenFn, (req, res) => {
 	})
 	let userpicurl = `http://127.0.0.1:3000/userbg/${req.files.pic.md5}.${query}`
 	
-	console.log(userpicurl)
-	
 	aboutmodel.findOne({userid:res.state1}).then(data => {
 		console.log(res.state1)
 		if(data) {
@@ -71,9 +69,15 @@ router.get('/', tokenFn, (req, res) => {
 		tmp = res.state1
 	}
 	aboutmodel.findOne({userid: tmp}).then(data => {
-		res.send({
-			url: data.bgpic
-		})
+		if(data) {
+			res.send({
+				url: data.bgpic
+			})
+		}else {
+			res.send({
+				url: 'http://127.0.0.1:3000/bg.jpg'
+			})
+		}
 	}).catch(err => {
 		console.log(err, tmp)
 		res.status(500).send('error')

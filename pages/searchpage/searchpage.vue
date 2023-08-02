@@ -56,7 +56,7 @@
 	import { routerhis } from '../../store/UseRouterPath.js'
 	
 	// path
-	let { changePathFn } = routerhis()
+	let { changePathFn, changeuserid } = routerhis()
 	// title 文本
 	let titletext = ref('')
 	// 获取搜索数据
@@ -80,6 +80,12 @@
 				})
 			}
 		}
+		// 判断文章数量，如果没有切换到用户
+		if(!keyWordDataAll.value.data.length) {
+			if(keyWordDataAll.value.user.length) {
+				activeName.value = '2'
+			}
+		}
 	})
 	
 	
@@ -94,6 +100,7 @@
 		// console.log(id)
 		if(id) {
 			uni.setStorageSync('search', titletext.value)
+			changeuserid(id)
 			changePathFn('/pages/searchpage/searchpage')
 			uni.navigateTo({
 				"animationType": 'slide-in-left',

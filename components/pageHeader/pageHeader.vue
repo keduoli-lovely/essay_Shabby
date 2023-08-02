@@ -9,7 +9,7 @@
 	</view>
 	
 	<view class="select-box" v-show="maskstatus">
-		<view class="select" v-if="true">
+		<view class="select" v-if="userroot">
 			<view class="row-sel" @click="touserDetail">
 				编辑资料
 			</view>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-	import { ref, nextTick, onMounted } from 'vue'
+	import { ref, computed, onMounted } from 'vue'
 	import { routerhis } from '../../store/UseRouterPath.js'
 	import { storeToRefs } from 'pinia'
 	import { sendpic, getpicurl } from '../../apis/sendpic.js'
@@ -39,6 +39,20 @@
 	import { userDetail } from '../../store/UseuserDetail.js'
 	
 	
+	// 获取上一次的path
+	let { pathUrl, useridsearch } = storeToRefs(routerhis())
+	
+	// 权限
+	let { userinfo } = storeToRefs(userDetail())
+	let userroot = computed(() => {
+		if(!userinfo.value.token) return false
+		
+		if(userinfo.value.userinfo.Account != useridsearch.value) {
+			return false
+		}else {
+			return true
+		}
+	})
 	// bg图片inp
 	let { changebgpic } = userDetail()
 
@@ -47,42 +61,42 @@
 	
 	onMounted(() => {
 		let topel = document.querySelector("#topel")
-		let inp = document.createElement('input')
-		inp.type = 'file',
-		inp.accept = 'image/*',
-		inp.id = 'pic',
-		inp.style.cssText = `
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			inset: 0;
-			opacity: 0;
-		`
-		inp.addEventListener("change", async (e) => {
-			let data = e.target.files[0]
-			if (data && data.type.startsWith("image/")) {
-				let formdata = new FormData()
-				formdata.append('pic', data)
-				
-				let res = await sendpic(formdata)
-				
-				if(res.data.code == 20040) {
-					ElMessage.success('更换成功')
-					let respic = await getpicurl()
-					changebgpic(respic.data.url)
-					maskstatus.value = false
+		if(topel) {
+			let inp = document.createElement('input')
+			inp.type = 'file',
+			inp.accept = 'image/*',
+			inp.id = 'pic',
+			inp.style.cssText = `
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				inset: 0;
+				opacity: 0;
+			`
+			inp.addEventListener("change", async (e) => {
+				let data = e.target.files[0]
+				if (data && data.type.startsWith("image/")) {
+					let formdata = new FormData()
+					formdata.append('pic', data)
+					
+					let res = await sendpic(formdata)
+					
+					if(res.data.code == 20040) {
+						ElMessage.success('更换成功')
+						let respic = await getpicurl()
+						changebgpic(respic.data.url)
+						maskstatus.value = false
+					}
 				}
-			}
-		})
-		topel.appendChild(inp)
+			})
+			topel.appendChild(inp)
+		}
+	
 	})
 	
 	let showselect = () => {
 		maskstatus.value = !maskstatus.value
 	}
-	
-	// 获取上一次的path
-	let { pathUrl } = storeToRefs(routerhis())
 	
 	let props = defineProps({
 		path: String,

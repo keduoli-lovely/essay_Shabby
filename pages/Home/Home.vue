@@ -27,10 +27,10 @@
 				
 				<view class="about">
 					<view class="love">
-						1 <text class="nav-text">关注</text>
+						{{ userliveandsend.send?.length }} <text class="nav-text">发布</text>
 					</view>
 					<view class="live">
-						1 <text class="nav-text">点赞</text>
+						{{ userliveandsend.live?.length }} <text class="nav-text">点赞</text>
 					</view>
 					<view class="star">
 						1 <text class="nav-text">收藏</text>
@@ -96,7 +96,7 @@ import pageHeader from '../../components/pageHeader/pageHeader.vue';
 import IndexCom from './components/index.vue';
 import LiveCom from './components/live.vue';
 import StarCom from './components/star.vue';
-import { finddata } from '../../apis/finddata.js'
+import { finddata, findpiblic } from '../../apis/finddata.js'
 import { userDetail } from '../../store/UseuserDetail.js'
 import { storeToRefs } from 'pinia'
 import { getpicurl } from '../../apis/sendpic.js'
@@ -108,12 +108,15 @@ let { userbgpic } = storeToRefs(userDetail())
 
 let { changebgpic } = userDetail()
 
-// 获取id&用户信息
+// 获取id&用户信息&用户发布文章&用户喜欢
 let userdetail = ref('')
+let userliveandsend = ref('')
 let path = ref('/pages/index/index')
 onLoad( async ({userid}) => {
 	if(userid) {
 		let res = await finddata(userid)
+		let res1 = await findpiblic(userid)
+		userliveandsend.value = res1.data.data.result
 		userdetail.value = res.data.result
 	}else {
 		uni.reLaunch({

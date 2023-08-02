@@ -5,3 +5,9 @@ export const finddata = (id) => {
 		url: `/find?id=${id}`
 	})
 }
+
+export const findpiblic = (id) => {
+	return http({
+		url: `/list/find?id=${id}`
+	})
+}
