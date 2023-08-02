@@ -4,10 +4,4 @@ static/
 
 .vite/
 
-serve/public/essay/*
-
-serve/public/userbg/*
-
 !serve/public/bg.jpg
-
-serve/public/*
