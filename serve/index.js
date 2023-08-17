@@ -21,6 +21,7 @@ const verify = require('./route/fn/isloginFn.js')
 const tokenFn = require('./route/fn/tokenFn.js')
 const Find = require('./route/FindData/find.js')
 const pic = require('./route/picApi/pic.js')
+const root = require('./route/rootpage/root.js')
 
 const app = express()
 
@@ -39,6 +40,7 @@ dbfn(() => {
 	app.use(fileUpload());
 	app.use(express.static(path.join(__dirname, 'public')))
 	
+	app.use('/root', root)
 	app.use('/pic', pic)
 	app.use('/upload', tokenFn, File)
 	app.use('/find', Find)
@@ -57,7 +59,7 @@ dbfn(() => {
 	})
 	
 	app.listen(3000, () => {
-		console.log('ok')
+		console.log('ok listener to 127.0.0.1:3000')
 	})
 })
 

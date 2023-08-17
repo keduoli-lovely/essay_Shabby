@@ -81,8 +81,8 @@
 			}
 		}
 		// 判断文章数量，如果没有切换到用户
-		if(!keyWordDataAll.value.data.length) {
-			if(keyWordDataAll.value.user.length) {
+		if(!keyWordDataAll.value.data?.length) {
+			if(keyWordDataAll.value.user?.length) {
 				activeName.value = '2'
 			}
 		}

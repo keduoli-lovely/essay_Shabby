@@ -43,7 +43,11 @@ let listdataSchema = new mongoose.Schema({
 		type: Number,
 		default: 0
 	},
-	essaypics: []
+	essaypics: [],
+	state: {
+		type: Number,
+		default: 0
+	}
 
 })
 

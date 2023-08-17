@@ -1,8 +1,19 @@
 <template>
 	<view class="index">
 		<view class="content">
-			index
+			<view class="speak">
+				xxxxxx
+			</view>
+			<view class="cont-text">
+				xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+			</view>
+			
+			
+			<view class="user-message-detail">
+				
+			</view>
 		</view>
+		
 	</view>
 </template>
 
@@ -23,7 +34,14 @@
 			border-radius: 14rpx;
 			height: 100%;
 			background-color: #8BC6EC;
-			background-image: linear-gradient(0deg, #e0e0e0 0%, #B5FFFC 140%);
+			.speak {
+				display: inline;
+				padding: 0 10rpx 2rpx;
+				border-bottom: 6rpx solid rgba(0, 0, 0, .5);
+			}
+			.cont-text {
+				margin-top: 20rpx;
+			}
 		}
 	}
 </style>
