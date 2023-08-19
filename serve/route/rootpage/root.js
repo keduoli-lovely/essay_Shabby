@@ -1,5 +1,6 @@
 const express = require('express')
 const fs = require('fs')
+const md5 = require('md5')
 const usermodel = require('../../DataBase/model/user.js')
 const listdataMOdel = require('../../DataBase/model/listdata.js')
 const rootModel = require('../../DataBase/model/root.js')
@@ -114,6 +115,58 @@ router.post('/essay', tokenFn, (req, res) => {
 
 router.post('/push', tokenFn, (req, res) => {
 	// 发布公告
+})
+
+router.post('/newuser', tokenFn, (req, res) => {
+	let { name, account, password, sex, age } = req.body
+	let hassex = '男'
+	switch(sex) {
+		case 1:
+			hassex = '男'
+			return
+		case 2:
+			hassex = '女'
+			return
+		case 3:
+			hassex = '沃尔玛购物袋'
+			return
+	}
+	
+	usermodel.findOne({ Account: account}).then(data => {
+		if(data) {
+			res.send({
+				code: 20040,
+				message: '账号已被使用'
+			})
+		}else {
+			let pwd = md5(password)
+			usermodel.create({
+				name,
+				Account: account,
+				password: pwd,
+				sex: hassex,
+				age
+			}).then(data => {
+				res.send({
+					code: 20020,
+					message: '创建成功'
+				})
+			}).catch(err => {
+				res.status(500).send({
+					code: 20050,
+					message: '出错了',
+					err: err
+				})
+			})
+		}
+	}).catch(err => {
+		res.status(500).send({
+			code: 20050,
+			message: '出错了',
+			err: err
+		})
+	})
+	 
 })
 
 router.post('/del', tokenFn, (req, res) => {
