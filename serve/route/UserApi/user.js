@@ -123,4 +123,27 @@ router.post('/change', tokenFn, (req, res) => {
 		})
 })
 
+router.post('/outline', tokenFn, (req, res) => {
+	let { id } = req.body
+	usermodel.findOne({Account: id}).then(data => {
+		if(data) {
+			res.send({
+				code: 20020,
+				message: '校验成功'
+			})
+		}else {
+			res.status(401).send({
+				code: 20041,
+				message: '账号被删除'
+			})
+		}
+	}).catch(err => {
+		console.log(err)
+		res.status(500).send({
+			code: 20050,
+			message: '出错了'
+		})
+	})
+})
+
 module.exports = router

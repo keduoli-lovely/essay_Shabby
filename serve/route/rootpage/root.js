@@ -25,7 +25,8 @@ router.get('/', tokenFn, (req, res) => {
 			code: 2000,
 			result: {
 				data
-			}
+			},
+			message: '获取成功'
 		})
 	}).catch(err => {
 		console.log(err)
@@ -49,7 +50,8 @@ router.get('/essay', tokenFn, (req, res) => {
 			code: 20000,
 			result: {
 				...data
-			}
+			},
+			message: '获取成功'
 		})
 	}).catch(err => {
 		console.log(err)
@@ -72,7 +74,8 @@ router.get('/user', tokenFn, (req, res) => {
 			code: 2000,
 			result: {
 				data
-			}
+			},
+			message: '获取成功'
 		})
 	}).catch(err => {
 		console.log(err)
@@ -123,13 +126,13 @@ router.post('/newuser', tokenFn, (req, res) => {
 	switch(sex) {
 		case 1:
 			hassex = '男'
-			return
+			break;
 		case 2:
 			hassex = '女'
-			return
+			break;
 		case 3:
 			hassex = '沃尔玛购物袋'
-			return
+			break;
 	}
 	
 	usermodel.findOne({ Account: account}).then(data => {
@@ -169,22 +172,30 @@ router.post('/newuser', tokenFn, (req, res) => {
 	 
 })
 
+// 删除用户
 router.post('/del', tokenFn, (req, res) => {
 	let { id } = req.body
 	
 	if( Array.isArray(id) ) {
 		// id.forEach(item => {
-			res.send({
-				message: '权限不够'
+			usermodel.deleteMany({Account: id}).then(data => {
+				res.send({
+					code: 20800,
+					message: '删除成功'
+				})
+			}).catch(err => {
+				console.log(err)
+				res.status(500).send({
+					code: 20500,
+					message: '出错了'
+				})
 			})
 		// })
 	}else {
 		usermodel.deleteOne({Account: id}).then(data => {
 			res.send({
 				code: 20000,
-				result: {
-					data
-				}
+				message: '删除成功'
 			})
 		}).catch(err => {
 			res.status(500).send({
@@ -193,6 +204,22 @@ router.post('/del', tokenFn, (req, res) => {
 			})
 		})
 	}
+})
+// 删除文章
+router.post('/remove', tokenFn, (req, res) => {
+	let { id } = req.body
+	listdataMOdel.deleteOne({_id: id}).then(data => {
+		res.send({
+			code: 20020,
+			message: '删除成功'
+		})
+	}).catch(err => {
+		console.log(err)
+		res.status(500).send({
+			code: 20050,
+			message: '出错了'
+		})
+	})
 })
 
 

@@ -247,6 +247,7 @@
 	import { keywordFn } from '../../store/keywordsearch.js'
 	import { ElMessage } from 'element-plus'
 	import { routerhis } from '../../store/UseRouterPath.js'
+	import { useroutline } from '../../apis/useroutline.js'
 	
 	
 	// path
@@ -287,6 +288,10 @@
 		root: false
 	})
 	onMounted(() => {
+		if(userinfo.value.token) {
+			// 判断账号是否被管理员删除或禁用
+			useroutline(userinfo.value.userinfo.Account)
+		}
 		fullscreenLoading.value = false
 		// 获取文章列表a
 		if(Storelistdata.value.length < 1) {
