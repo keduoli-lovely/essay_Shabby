@@ -3,7 +3,10 @@
 		<view class="logding" v-loading.fullscreen.lock="fullscreenLoading">
 			
 		</view>
-		<view class="detail" v-if="temporarydata">
+		<view class="detail" v-if="temporarydata" :class="temporarydata.state == -1 ? 'atv' : ''">
+			<view class="tips">
+				<el-icon class="warn_icon"><Warning /></el-icon>已被多人举报,注意辨别
+			</view>
 			<el-page-header @back="backtohome" :icon="ArrowLeft">
 			    <template #content>
 			      <span class="text-large font-600 mr-3" style="white-space: nowrap; width: 400rpx; overflow: hidden;text-overflow: ellipsis;display: block;"> {{ temporarydata.title }} </span>
@@ -18,7 +21,7 @@
 							删除文章
 						</view>
 					</view>
-					<view class="report" v-else>
+					<view class="report" v-else @click="isreport">
 						<el-icon class="icon11"><Warning /></el-icon>
 						<view class="move-text">
 							举报
@@ -179,10 +182,12 @@
 			</interrogate>
 		</view>
 	</view>
+
 </template>
 
 
 <script setup>
+	import Choice from '../../components/Choice/Choice.vue'
 	import { ref, computed, onMounted } from 'vue'
 	import { ArrowLeft } from '@element-plus/icons-vue'
 	import { temporary } from '../../store/Usetemporary.js'
@@ -196,6 +201,7 @@
 	import { getrowEssay } from '../../apis/rowEssay.js'
 	import { onLoad } from "@dcloudio/uni-app"
 	import PicListItem from '../../components/PicListItem/PicListItem.vue'
+	import { report } from '../../apis/reportuser.js'
 	
 	// 获取query参数
 	let essay_id_data = ref(null)
@@ -360,11 +366,38 @@
 		essay_id.value = temporarydata.value._id
 		changeloginState.value = true
 	}
+	
+	// 举报功能
+	let isreport = async () => {
+		let res = await report(temporarydata.value._id)
+		btnMask.value = -500
+		if(res.data.code == 20020) {
+			alert('举报成功')
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
+	.atv {
+		position: relative;
+		.tips {
+			dispaly: block !important;
+			color: red;
+			position: absolute;
+			top: 248rpx;
+			left: 23%;
+			.warn_icon {
+				margin-right: 4rpx;
+				padding-bottom: 2rpx;
+				vertical-align: middle;
+			}
+		}
+	}
 	.detail {
 		padding: 40rpx 20rpx 150rpx;
+		.tips {
+			display: none;
+		}
 		.disappointed {
 			position: fixed;
 			top: 42rpx;

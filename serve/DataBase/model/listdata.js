@@ -44,6 +44,12 @@ let listdataSchema = new mongoose.Schema({
 		default: 0
 	},
 	essaypics: [],
+	/*
+		@state: 
+		0: 待审核，普通用户不可见
+		1: 通过审核， 普通用户可见
+		-1: 被举报， 管理员判断删除或撤销举报
+	*/
 	state: {
 		type: Number,
 		default: 0

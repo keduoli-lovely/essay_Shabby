@@ -13,7 +13,6 @@ export const Uselistdata = defineStore('listdata', () => {
 		let res = await getlistdata(limit)
 		let isnews = JSON.stringify(Storelistdata.value) === JSON.stringify(res.data.data.result) ? true : false
 		Storelistdata.value = res.data.data.result
-		
 		return isnews
 	}
 	

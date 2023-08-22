@@ -222,5 +222,48 @@ router.post('/remove', tokenFn, (req, res) => {
 	})
 })
 
+// 修改用户相关
+router.post('/update/user', tokenFn, (req, res) => {
+	let { index, obj } = req.body
+	console.log(req.body, index, obj)
+	res.send('ok')
+})
+// 修改文章状态
+router.post('/update/essay', tokenFn, (req, res) => {
+	let { index, id } = req.body
+	if(index == -1) {
+		listdataMOdel.deleteOne({_id: id}).then(data => {
+			res.send({
+				code: 20020,
+				message: '删除违规文章成功'
+			})
+		}).catch(err => {
+			res.status(500).send({
+				code: 20050,
+				message: '出错了'
+			})
+		})
+	}else {
+		listdataMOdel.findOne({_id: id}).updateOne({state: index}).then(data => {
+			if(data) {
+				res.send({
+					code: 20020,
+					message: '提交成功'
+				})
+			}else {
+				res.send({
+					code: 20030,
+					message: '未找到用户/修改失败'
+				})
+			}
+		}).catch(err => {
+			res.status(500).send({
+				code: 20050,
+				message: '出错了'
+			})
+		})
+	}
+	
+})
 
 module.exports = router

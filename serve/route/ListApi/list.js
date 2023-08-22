@@ -4,16 +4,18 @@ const usermodel = require('../../DataBase/model/user.js')
 const voucherisout = require('../fn/voucherisout.js')
 const tokenFn = require('../fn/tokenFn.js')
 const error = require('../errData/error.js')
+const filterFn = require('../fn/filterlistdata.js')
 
 const router = express.Router()
 
 router.get('/', (req, res) => {
 	let { limit = 15 } = req.query
 	listdataMOdel.find().limit(limit).then((list) => {
+		let filter_res = filterFn(list)
 		res.send({
 			data: {
 				code: 200,
-				result: list
+				result: filter_res
 			}
 		})
 	}).catch((err) => {
@@ -28,10 +30,11 @@ router.get('/', (req, res) => {
 router.get('/time', (req, res) => {
 	let { limit = 15 } = req.query
 	listdataMOdel.find().sort({time: -1}).limit(limit).exec().then((data) => {
+		let filter_res = filterFn(data)
 		res.send({
 			data: {
 				code: 200,
-				result: data
+				result: filter_res
 			}
 		})
 	}).catch((err) => {
@@ -111,10 +114,11 @@ router.post('/star', tokenFn, (req, res) => {
 router.get('/solt', (req, res) => {
 	let { limit = 15 } = req.query
 	listdataMOdel.find().sort({live: -1}).limit(limit).exec().then((data) => {
+		let filter_res = filterFn(data)
 		res.send({
 			data: {
 				code: 200,
-				result: data
+				result: filter_res
 			}
 		})
 	}).catch((err) => {
@@ -162,6 +166,29 @@ router.get('/keyword', (req, res) => {
 	}).catch(err => {
 		console.log(err)
 		res.status(500).send(error)
+	})
+})
+
+router.post('/report', tokenFn, (req, res) => {
+	let { id } = req.body
+	
+	listdataMOdel.findOne({_id: id}).updateOne({state: -1}).then(data => {
+		if(data) {
+			res.send({
+				code: 20020,
+				message: '举报成功'
+			})
+		}else {
+			res.send({
+				code: 20040,
+				message: '未找到'
+			})
+		}
+	}).catch(err => {
+		res.status(500).send({
+			code: 20050,
+			message: '出错了'
+		})
 	})
 })
 

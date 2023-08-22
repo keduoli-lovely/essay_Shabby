@@ -165,9 +165,6 @@
 				let res = await AddNews(obj)
 				if(res.data.code == 200) {
 					getEssayList(userinfo.value.userinfo.Account)
-					getlistdatafn()
-					getlistdatatimefn()
-					getlistdatasoltfn()
 					ElMessage.success(res.data.message)
 					uni.reLaunch({
 						url: '/pages/index/index'

@@ -1,5 +1,8 @@
 <template>
-	<el-card class="box-card" body-style="height: auto">
+	<el-card class="box-card" body-style="height: auto" :class="listdata.state == -1 ? 'atv' : ''">
+		<view class="tips">
+			已被举报待审核
+		</view>
 		<view class="header">
 			<view class="title">
 				{{ listdata?.title }}
@@ -36,8 +39,24 @@
 </script>
 
 <style lang="scss" scoped>
+	.atv {
+		background-color: rgba(255, 0, 0, .1);
+		.tips {
+			display: block !important;
+			position: absolute;
+			top: 30%;
+			right: 0;
+			transform: rotate(45deg) translate(28rpx, -68rpx);
+			padding: 5rpx 40rpx;
+			background-color: skyblue;
+		}
+	}
 	.el-card {
+		position: relative;
 		margin-top: 20rpx;
+		.tips {
+			display: none;
+		}
 	}
 	.el-card:first-child {
 		margin-top: 0;
