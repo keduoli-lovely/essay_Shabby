@@ -3,7 +3,7 @@ const tokenFn = require('../fn/tokenFn.js')
 const error = require('../errData/error.js')
 const listdataMOdel = require('../../DataBase/model/listdata.js')
 const appraisemodel = require('../../DataBase/model/appraise.js')
-
+const statistics = require('../fn/monthlyNewUsers.js')
 
 const router = express.Router()
 
@@ -19,6 +19,7 @@ router.delete('/', tokenFn, (req, res) => {
 				}).catch((err) => {
 					res.status(500).send(error)
 				})
+				statistics(false, -1)
 				res.send({
 					data: {
 						code: 200,

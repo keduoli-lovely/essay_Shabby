@@ -6,6 +6,7 @@ const voucherisout = require('../fn/voucherisout.js')
 const tokenFn = require('../fn/tokenFn.js')
 const changelistinuserdata = require('../fn/updatauserpic.js')
 const error = require('../errData/error.js')
+const statistics = require('../fn/monthlyNewUsers.js')
 
 const router = express.Router()
 
@@ -70,7 +71,7 @@ router.post('/registered', (req, res) => {
 				password: pass,
 				Account
 			}).then((data) => {
-				
+				statistics(true, 1)
 				let tokendata = voucher({ pass, Account })
 				res.send({
 					data: {
