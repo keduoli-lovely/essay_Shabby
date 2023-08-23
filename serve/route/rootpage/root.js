@@ -1,6 +1,7 @@
 const express = require('express')
 const fs = require('fs')
 const md5 = require('md5')
+const path = require('path')
 const usermodel = require('../../DataBase/model/user.js')
 const listdataMOdel = require('../../DataBase/model/listdata.js')
 const rootModel = require('../../DataBase/model/root.js')
@@ -9,6 +10,9 @@ const voucher = require('../fn/voucher.js')
 // 校验token
 const tokenFn = require('../fn/tokenFn.js')
 const rootuser = require('../../root.json')
+const statistics = require('../fn/monthlyNewUsers.js')
+const Monthmodel = require('../../DataBase/model/new_users_per_month.js')
+
 
 const router = express.Router()
 
@@ -20,7 +24,7 @@ const router = express.Router()
 
 router.get('/', tokenFn, (req, res) => {
 	// 获取基本数据
-	rootModel.find().then(data => {
+	Monthmodel.find().then(data => {
 		res.send({
 			code: 2000,
 			result: {
@@ -31,8 +35,23 @@ router.get('/', tokenFn, (req, res) => {
 	}).catch(err => {
 		console.log(err)
 		res.status(500).send({
-			code: 20040,
-			message: 'error'
+			code: 20050,
+			message: '出错了'
+		})
+	})
+	
+})
+router.get('/hot', tokenFn, (req, res) => {
+	listdataMOdel.find().sort({live: -1}).limit(3).exec().then(data => {
+		res.send({
+			code: 20020,
+			data: data
+		})
+	}).catch(err => {
+		console.log(err)
+		res.status(500).send({
+			code: 20050,
+			message: '出错了'
 		})
 	})
 })
@@ -121,7 +140,7 @@ router.post('/push', tokenFn, (req, res) => {
 })
 
 router.post('/newuser', tokenFn, (req, res) => {
-	let { name, account, password, sex, age } = req.body
+	let { name, account, password, sex, age, pic } = req.body
 	let hassex = '男'
 	switch(sex) {
 		case 1:
@@ -142,13 +161,15 @@ router.post('/newuser', tokenFn, (req, res) => {
 				message: '账号已被使用'
 			})
 		}else {
+			statistics(true, 1)
 			let pwd = md5(password)
 			usermodel.create({
 				name,
 				Account: account,
 				password: pwd,
 				sex: hassex,
-				age
+				age,
+				pic
 			}).then(data => {
 				res.send({
 					code: 20020,
@@ -179,6 +200,7 @@ router.post('/del', tokenFn, (req, res) => {
 	if( Array.isArray(id) ) {
 		// id.forEach(item => {
 			usermodel.deleteMany({Account: id}).then(data => {
+				statistics(true, -1)
 				res.send({
 					code: 20800,
 					message: '删除成功'
@@ -209,6 +231,7 @@ router.post('/del', tokenFn, (req, res) => {
 router.post('/remove', tokenFn, (req, res) => {
 	let { id } = req.body
 	listdataMOdel.deleteOne({_id: id}).then(data => {
+		statistics(false, -1)
 		res.send({
 			code: 20020,
 			message: '删除成功'
@@ -264,6 +287,29 @@ router.post('/update/essay', tokenFn, (req, res) => {
 		})
 	}
 	
+})
+
+// 创建用户头像
+router.post('/upload', tokenFn, (req, res) => {
+	if (!req.files || Object.keys(req.files).length === 0) {
+	  return res.status(400).send('No files were uploaded.');
+	}
+	
+	let pathurl =  path.join(__dirname, '/../../public')
+	
+	let query = req.files.pic.name.split('.')[1]
+	fs.writeFile((pathurl + '/' + req.files.pic.md5 + '.' + query), req.files.pic.data, (err, data) => {
+	  if (err) {
+		  return res.status(500).send(err)
+	  }
+	})
+	let userpicurl = `http://127.0.0.1:3000/${req.files.pic.md5}.${query}`
+	
+	res.send({
+		code: 20010,
+		url: userpicurl,
+		message: '上传成功'
+	})
 })
 
 module.exports = router
