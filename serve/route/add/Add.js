@@ -3,6 +3,7 @@ const listdataMOdel = require('../../DataBase/model/listdata.js')
 const tokenFn = require('../fn/tokenFn.js')
 const fs = require('fs')
 const path = require('path')
+const statistics = require('../fn/monthlyNewUsers.js')
 
 const router = express.Router()
 
@@ -15,6 +16,7 @@ router.post('/',tokenFn , (req, res) => {
 		text: req.body.text || '没有内容哦!',
 		essaypics: [...new Set(pic_list)]
 	}).then((data) => {
+		statistics(false, 1)
 		pic_list = []
 		res.send({
 			code: 200,
