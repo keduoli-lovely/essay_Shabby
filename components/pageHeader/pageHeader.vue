@@ -37,8 +37,14 @@
 	import { sendpic, getpicurl } from '../../apis/sendpic.js'
 	import { ElMessage } from 'element-plus'
 	import { userDetail } from '../../store/UseuserDetail.js'
+	import { onLoad } from "@dcloudio/uni-app";
 	
 	
+	let query_id = ref('')
+	onLoad((quer) => {
+		query_id.value = quer.userid
+		
+	})
 	// 获取上一次的path
 	let { pathUrl, useridsearch } = storeToRefs(routerhis())
 	
@@ -46,12 +52,16 @@
 	let { userinfo } = storeToRefs(userDetail())
 	let userroot = computed(() => {
 		if(!userinfo.value.token) return false
-		
-		if(userinfo.value.userinfo.Account != useridsearch.value) {
-			return false
+		if(!useridsearch.value) {
+			return userinfo.value.userinfo.Account == query_id.value ? true : false
 		}else {
-			return true
+			if(userinfo.value.userinfo.Account != useridsearch.value) {
+				return false
+			}else {
+				return true
+			}
 		}
+		
 	})
 	// bg图片inp
 	let { changebgpic } = userDetail()
@@ -110,7 +120,6 @@
 	}
 	
 	let topage = () => {
-		console.log()
 		if(props.path) {
 			if(pathUrl.value) {
 				uni.reLaunch({
