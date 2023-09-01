@@ -13,7 +13,7 @@
 			<view class="mask-bg">
 				
 			</view>
-			<image :src="userbgpic" mode="widthFix"></image>
+			<image :src="userbgpic" mode="heightFix"></image>
 		</view>
 		
 		<view class="user-info">
@@ -147,6 +147,7 @@ let changenav = (e) => {
 			image {
 				z-index: -1;
 				width: 100%;
+				height: 420rpx !important;
 				display: block;
 			}
 			.mask-bg {

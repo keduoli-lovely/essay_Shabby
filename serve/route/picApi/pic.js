@@ -12,7 +12,7 @@ router.post('/',tokenFn, (req, res) => {
 	  return res.status(400).send('No files were uploaded.');
 	}
 	let binary = req.files.binary;
-	let pathurl =  path.join(__dirname, '/../../public')
+	let pathurl =  path.join(__dirname, '/../../public/userbg')
 	let query = req.files.pic.name.split('.')[1]
 	fs.writeFile((pathurl + '/' + req.files.pic.md5 + '.' + query), req.files.pic.data, (err, data) => {
 	  if (err) {
