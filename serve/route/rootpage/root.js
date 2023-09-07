@@ -114,7 +114,7 @@ router.post('/', (req, res) => {
 			code: 2000,
 			result: {
 				token: token,
-				name: admin,
+				name: rootuser.name,
 				message: '登录成功'
 			}
 		})
@@ -128,7 +128,42 @@ router.post('/', (req, res) => {
 
 router.post('/updata', tokenFn, (req, res) => {
 	// 更改管理员 --账号/密码
-	fs.writeFileSync('root.json', JSON.stringify(rootuser, null, 2));
+	let { update_sta } = req.body
+	if(update_sta) {
+		let { account, password } = req.body
+		fs.writeFileSync(
+			'root.json', 
+			JSON.stringify({
+				name: rootuser.name,
+				admin: account,
+				password
+			})
+		);
+		res.send({
+			code: 20020,
+			message: '修改成功'
+		})
+	}else {
+		if("admin" != rootuser.admin && "admin" != rootuser.password) {
+			fs.writeFileSync(
+				'../../root.json', 
+				JSON.stringify({
+					name: "keduoli",
+					admin: 'admin',
+					password: 'admin'
+				})
+			);
+			res.send({
+				code: 20060,
+				message: '重置成功'
+			})
+		}else {
+			res.send({
+				code: 20011,
+				message: '账号未被修改,无法重置'
+			})
+		}
+	}
 })
 
 router.post('/essay', tokenFn, (req, res) => {
