@@ -9,7 +9,7 @@ const rootModel = require('../../DataBase/model/root.js')
 const voucher = require('../fn/voucher.js')
 // 校验token
 const tokenFn = require('../fn/tokenFn.js')
-const rootuser = require('../../root.json')
+const rootuser = require('./root.json')
 const statistics = require('../fn/monthlyNewUsers.js')
 const Monthmodel = require('../../DataBase/model/new_users_per_month.js')
 
@@ -40,6 +40,13 @@ router.get('/', tokenFn, (req, res) => {
 		})
 	})
 	
+})
+router.get('/getadmin', tokenFn, (req, res) => {
+	res.send({
+		code: 20200,
+		account: rootuser.admin,
+		password: rootuser.password
+	})
 })
 router.get('/hot', tokenFn, (req, res) => {
 	listdataMOdel.find().sort({live: -1}).limit(3).exec().then(data => {
@@ -128,25 +135,34 @@ router.post('/', (req, res) => {
 
 router.post('/updata', tokenFn, (req, res) => {
 	// 更改管理员 --账号/密码
-	let { update_sta } = req.body
-	if(update_sta) {
-		let { account, password } = req.body
-		fs.writeFileSync(
-			'root.json', 
-			JSON.stringify({
-				name: rootuser.name,
-				admin: account,
-				password
+	const path_name = __dirname
+	const { update_sta } = req.body
+	if(update_sta === 1) {
+		const { account, password } = req.body
+		if(account != rootuser.admin || password != rootuser.password) {
+			fs.writeFileSync(
+				`${path_name}/root.json`, 
+				JSON.stringify({
+					name: rootuser.name,
+					admin: account,
+					password
+				})
+			);
+			res.send({
+				code: 20020,
+				message: '修改成功'
 			})
-		);
-		res.send({
-			code: 20020,
-			message: '修改成功'
-		})
+		}else {
+			res.send({
+				code: 20011,
+				message: '账号未被修改,无法重置'
+			})
+		}
+		
 	}else {
 		if("admin" != rootuser.admin && "admin" != rootuser.password) {
 			fs.writeFileSync(
-				'../../root.json', 
+				`${path_name}/root.json`,
 				JSON.stringify({
 					name: "keduoli",
 					admin: 'admin',
@@ -250,6 +266,7 @@ router.post('/del', tokenFn, (req, res) => {
 		// })
 	}else {
 		usermodel.deleteOne({Account: id}).then(data => {
+			statistics(true, -1)
 			res.send({
 				code: 20000,
 				message: '删除成功'

@@ -27,7 +27,9 @@ const statistics = (key, num) => {
 	}).then(data => {
 		if(data) {
 			let filer = fn(data, key, num)
-			filer.save().then(data => {
+			Monthmodel.findOne({
+				index: this_month
+			}).updateMany(filer).then(data => {
 				console.log(data)
 			}).catch(err => {
 				console.log(err)
